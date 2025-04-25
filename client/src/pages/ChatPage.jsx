@@ -114,20 +114,20 @@ const ChatPage = () => {
   }, [socket, handleReceive]);
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen">
       <Sidebar socket={socket} />
       {currentSender.type 
         ? <ChatWindow socket={socket} /> 
         : <div className="flex-1 flex flex-col justify-center items-center px-6 text-center">
-            <div className="mb-8 p-12 border-4 border-dashed border-gray-400 
-            bg-gray-600 bg-opacity-10 rounded-lg max-w-md w-full hover:text-blue-600 hover:border-blue-600">
+            <div className="mb-8 p-12 border-4 border-dashed border
+            bg-opacity-10 rounded-lg max-w-md w-full duration-200 hover:scale-105">
                 <i className="fas fa-inbox text-6xl mb-6 opacity-50"></i>
                 <h2 className="text-3xl sm:text-4xl font-semibold mb-4">
                     Nothing here...
                 </h2>
-                <p className="text-lg mb-6">
+                <h3 className="text-lg mb-6">
                     Click <i className="fas fa-caret-down"></i> on the left to create one!
-                </p>
+                </h3>
             </div>
           </div>
       }

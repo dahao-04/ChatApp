@@ -4,7 +4,7 @@ const Inbox = ({user, mess, onClick}) => {
     const time = formatTime(mess.lastMessage.createAt);
 
     return (
-        <div className="p-4 border-b border-gray-200" onClick={onClick}>
+        <div className="py-4 border-b border-gray-500" onClick={onClick}>
             <div className="flex items-center w-full">
                 <img
                     alt="User avatar"

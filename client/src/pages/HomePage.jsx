@@ -41,12 +41,12 @@ const HomePage = () => {
               <p className="text-lg text-gray-700 mb-6">
                Connect with your friends and family instantly.
               </p>
-              <button className="bg-blue-600 px-6 py-2 rounded-full hover:bg-blue-700">
-               <Link to="/login" className='text-white'>Login</Link>
+              <button className="px-6 py-2 rounded-full">
+               <Link to="/login" className='text-white hover:text-white'>Login</Link>
               </button>
-              <p className="mt-4">
+              <p className="mt-4 text-gray-700">
                Don't have an account? 
-               <Link className="text-blue-600 hover:underline ms-1" to="/signup">
+               <Link className="hover:underline hover:text-black ms-1 text-gray-700" to="/signup">
                     Sign Up
                </Link>
               </p>

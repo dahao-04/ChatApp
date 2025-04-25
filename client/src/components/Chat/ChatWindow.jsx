@@ -132,14 +132,14 @@ const ChatWindow = ({ socket }) => {
 
     return (
         <div className="flex-1 flex flex-col">
-            <ChatHeader userInfo={currentSender.name} />
+            <ChatHeader socket={socket}/>
 
-            <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
-            {chatLog.map((msg, idx) =>
-                msg.from === user.id
-                ? <SendMess key={idx} mess={msg} />
-                : <ReceiveMess key={idx} mess={msg} />
-            )}
+            <div className="flex-1 overflow-y-auto p-4">
+                {chatLog.map((msg, idx) =>
+                    msg.from === user.id
+                    ? <SendMess key={idx} mess={msg} />
+                    : <ReceiveMess key={idx} mess={msg} />
+                )}
             </div>
 
             <ChatFooter sendMess={handleSend} />

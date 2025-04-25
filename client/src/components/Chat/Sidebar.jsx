@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import Inbox from "./Inbox";
-import Modal from "../Modal";
+import FormModal from "../FormModal";
 import ChatContext from "../../context/chatContext";
 
 const Sidebar = ({ socket }) => {
@@ -103,7 +103,7 @@ const Sidebar = ({ socket }) => {
 
         setConversationList(prev => [...prev, conversation]);
 
-        socket.emit("create-group", {
+        socket.emit("add-to-group", {
           userList: groupPayload.members_id.filter(u => u !== user.id),
           groupId: newGroup._id
         });
@@ -138,15 +138,15 @@ const Sidebar = ({ socket }) => {
   }, [searchText, conversationList, user.id]);
 
   return (
-    <div className="w-1/4 bg-white border-r border-gray-200">
-      <div className="p-4 border-b border-gray-200">
+    <aside className="w-1/4">
+      <div className="title p-4 border-b border-gray-200">
         <h1 className="text-xl font-bold">
           Chat App
         </h1>
       </div>
       <div className="p-4 flex">
         <input 
-            className="w-full p-2 border border-gray-300 rounded me-2 focus:outline-none focus:ring-2 focus:ring-blue-600" 
+            className="w-full p-2 border border-gray-600 rounded me-2" 
             value={searchText}
             onChange={e => setSearchText(e.target.value)}
             placeholder="Search..."
@@ -154,32 +154,44 @@ const Sidebar = ({ socket }) => {
         <div className="relative">
           <button 
             onClick={() => setToggleBtn(state => !state)}
-            className="border border-gray-300 hover:text-blue-600 transition focus:outline-none focus:ring-2 focus:ring-blue-600"
+            className= 'transition'
           >
-            <i className="fas fa-caret-down"></i>
+            <i className={`fas fa-caret-right transition-transform duration-300 ${toggleBtn ? "rotate-90" : ""}`}></i>
           </button>
           {toggleBtn && (
-            <ul className="absolute right-0 mt-2 w-48 bg-white rounded-xl p-4 shadow-lg z-10 space-y-2">
-              <li className="text-gray-700 hover:text-blue-600 transition">
-                <button className="w-full text-left" onClick={() => {setCreateChatModal(true); setToggleBtn(false)}}>
-                  <i className="fas fa-user-friends"></i> Add chat
+            <ul className="absolute right-0 mt-2 w-48 rounded-xl p-4 shadow-lg z-10 space-y-2">
+              <li className="transition-transform duration-200 hover:scale-105">
+                <button 
+                  className="w-full text-left flex items-center gap-2" 
+                  onClick={() => {setCreateChatModal(true); setToggleBtn(false)}}
+                >
+                  <i className="fas fa-user-friends transition-transform duration-200 hover:scale-110"></i>
+                  <span className="font-medium">Add chat</span>
                 </button>
               </li>
-              <li className="text-gray-700 hover:text-blue-600 transition">
-                <button className="w-full text-left" onClick={() => {setCreateGroupChatModal(true); setToggleBtn(false)}}>
-                  <i className="fas fa-users"></i> Add group
+              <li className="transition-transform duration-200 hover:scale-105">
+                <button 
+                  className="w-full text-left flex items-center gap-2" 
+                  onClick={() => {setCreateGroupChatModal(true); setToggleBtn(false)}}
+                >
+                  <i className="fas fa-users"></i>
+                  <span className="font-medium">Add group</span>
                 </button>
               </li>
-              <li className="text-gray-700 hover:text-blue-600 transition">
-                <button className="w-full text-left" onClick={handleSignOut}>
-                  <i className="fas fa-sign-out-alt"></i> Log out
+              <li className="transition-transform duration-200 hover:scale-105">
+                <button 
+                  className="w-full text-left flex items-center gap-2" 
+                  onClick={handleSignOut}
+                >
+                  <i className="fas fa-sign-out-alt"></i>
+                  <span className="font-medium">Log out</span>
                 </button>
               </li>
             </ul>
           )}
         </div>
       </div>
-      <div className="h-5/6">
+      <div className="p-4">
         {filteredList.map((item, idx) => (
             <Inbox
                 key={idx}
@@ -205,12 +217,20 @@ const Sidebar = ({ socket }) => {
             ))}
       </div>
       {createChatModal && (
-        <Modal closeModal={setCreateChatModal} fieldList={chatFieldList} func={handleCreateChat}/>
+        <FormModal 
+        title={"Create new chat"}
+        closeModal={setCreateChatModal} 
+        fieldList={chatFieldList} 
+        func={handleCreateChat}/>
       )}
       {createGroupChatModal && (
-        <Modal closeModal={setCreateGroupChatModal} fieldList={groupChatFieldList} func={handleCreateGroupChat}/>
+        <FormModal 
+        title={"Create new chat"}
+        closeModal={setCreateGroupChatModal} 
+        fieldList={groupChatFieldList} 
+        func={handleCreateGroupChat}/>
       )}
-    </div>
+    </aside>
   );
 };
 

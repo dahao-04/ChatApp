@@ -26,7 +26,7 @@ const Form = ({type, fields, func}) => {
         func(formData);
     }
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex items-center justify-center min-h-screen">
             <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
                 <div className="text-center">
                     <h2 className="text-2xl font-bold">
@@ -53,13 +53,13 @@ const Form = ({type, fields, func}) => {
                     {(type==="login") && (
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
-                                <input className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" id="remember_me" name="remember_me" type="checkbox"/>
+                                <input className="h-4 w-4 text-blue-600 border-gray-300 rounded" id="remember_me" name="remember_me" type="checkbox"/>
                                 <label className="ml-2 block text-sm text-gray-900" htmlFor="remember_me">
                                 Remember me
                                 </label>
                             </div>
                             <div className="text-sm">
-                                <a className="font-medium text-blue-600 hover:text-blue-500" href="#">
+                                <a className="font-medium" href="#">
                                 Forgot your password?
                                 </a>
                             </div>
@@ -67,7 +67,7 @@ const Form = ({type, fields, func}) => {
                     )}
                     <div>
                         <button 
-                        className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600" 
+                        className="w-full p-2 text-white rounded" 
                         type="submit"
                         >
                             {capital(type)}
@@ -78,7 +78,7 @@ const Form = ({type, fields, func}) => {
                     <div className="text-center">
                         <p className="text-sm text-gray-600">
                         Don't have an account?
-                            <Link className="font-medium text-blue-600 hover:text-blue-500 ms-1" to="/signup">
+                            <Link className="font-medium  ms-1" to="/signup">
                                 Sign up
                             </Link>
                         </p>

@@ -20,13 +20,25 @@ io.on('connection', (socket) => {
     users.set(userId, socket.id);
   })
 
-  socket.on('create-group', ({userList, groupId}) => {
+  socket.on('add-to-group', ({userList, groupId}) => {
     if(userList.length > 0) {
       userList.forEach((user) => {
         const socketId = users.get(user);
         if(socketId) {
           io.in(socketId).socketsJoin(groupId)
           console.log(`User ${socketId} joined group ${groupId}.`);
+        }
+      })
+    }
+  })
+
+  socket.on('delete-from-group', ({userList, groupId}) => {
+    if(userList.length > 0) {
+      userList.forEach((user) => {
+        const socketId = users.get(user);
+        if(socketId) {
+          io.in(socketId).socketsLeave(groupId)
+          console.log(`User ${socketId} leave group ${groupId}.`);
         }
       })
     }

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import capitalLetters from '../helpers/capitalLetters'
 
-const Modal = ({closeModal, fieldList, func}) => {
+const FormModal = ({title, closeModal, fieldList, func}) => {
     const [formData, setformData] = useState(Object.fromEntries(fieldList.map(field => [field, ""])));
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -19,7 +19,7 @@ const Modal = ({closeModal, fieldList, func}) => {
             <div className="bg-white rounded-2xl shadow-2xl transform transition-all w-full max-w-md mx-4">
                 <div className="px-6 py-5">
                 <h3 className="text-xl font-semibold text-gray-900 text-center mb-4" id="modal-title">
-                    Create new chat
+                    {title}
                 </h3>
                 <form id="dataForm" className="space-y-4">
                     {fieldList.map((field, key) => {
@@ -31,7 +31,7 @@ const Modal = ({closeModal, fieldList, func}) => {
                                     id={field}
                                     name={field}
                                     value={formData[field]}
-                                    className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm sm:text-sm"
                                     onChange={handleChange}
                                 />
                             </div>
@@ -42,7 +42,8 @@ const Modal = ({closeModal, fieldList, func}) => {
                 <div className="bg-gray-50 rounded-2xl px-6 py-4 flex justify-end gap-3">
                 <button
                     id="closeModalBtn"
-                    className="inline-flex justify-center rounded-md border border-gray-300 px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="inline-flex justify-center rounded-md border border-gray-300 px-4 py-2 bg-white text-sm 
+                    font-medium text-gray-700 hover:bg-gray-100"
                     onClick= {() => closeModal(false)}
                 >
                     Cancel
@@ -50,10 +51,11 @@ const Modal = ({closeModal, fieldList, func}) => {
                 <button
                     id="submitBtn"
                     type="submit"
-                    className="inline-flex justify-center rounded-md px-4 py-2 bg-blue-600 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="inline-flex justify-center rounded-md px-4 py-2 bg-blue-600 text-sm font-medium 
+                    text-white hover:bg-blue-700"
                     onClick={handleSubmit}
                 >
-                    Submit
+                    Done
                 </button>
                 </div>
             </div>
@@ -62,4 +64,4 @@ const Modal = ({closeModal, fieldList, func}) => {
     )
 }
 
-export default Modal;
+export default FormModal;

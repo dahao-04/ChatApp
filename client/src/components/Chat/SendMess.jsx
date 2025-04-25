@@ -6,7 +6,7 @@ const SendMess = ({ mess }) => {
     <div className="flex items-start mb-4 flex-row-reverse">
         <img alt="Current user avatar" className="w-10 h-10 rounded-full" height="40" src="https://storage.googleapis.com/a1aa/image/rXfp-q2R3YYz6sT5PcHxtwTYxxESLsKr7WeU-u5BklE.jpg" width="40"/>
         <div className="mr-3">
-            <div className="bg-blue-500 text-white p-3 rounded-lg shadow">
+            <div className="bg-[#59C1BD] text-white p-3 rounded-lg shadow">
                 <p>
                     {mess.content}
                 </p>

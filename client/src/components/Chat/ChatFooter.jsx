@@ -12,7 +12,7 @@ const ChatFooter = ({ sendMess }) => {
         }
     };
     return (
-        <div className="p-4 border-t border-gray-200 bg-white">
+        <footer className="p-4 border-t border-gray-200">
             <div className="flex items-center">
                 <input 
                 className="w-full p-2 border border-gray-300 rounded" 
@@ -20,11 +20,12 @@ const ChatFooter = ({ sendMess }) => {
                 value={mess} 
                 type="text"
                 onChange={handleInput}/>
-                    <button className="ml-2 p-2 bg-blue-500 text-white rounded" onClick={handleSend}>
-                        <i className="fas fa-paper-plane"></i>
+                    <button className="w-10 ml-2 p-2 text-white rounded group" onClick={handleSend}>
+                        <i className="fas fa-paper-plane group-hover:translate-x-1 
+                        group-hover:-translate-y-1 group-hover:scale-105 duration-200"></i>
                     </button>
             </div>
-        </div>
+        </footer>
     );
 }
 

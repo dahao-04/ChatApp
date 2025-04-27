@@ -13,7 +13,6 @@ const ChatPage = () => {
     user,
     setReceiveList,
     setConversationList,
-    setCurrentSender,
     groupList
   } = useContext(ChatContext);
 
@@ -39,22 +38,22 @@ const ChatPage = () => {
   const handleReceive = useCallback(async (message) => {
     // determine sender (direct vs. group)
     let senderInfo = currentSender;
-    
     if (message.type === 'direct') {
-    const res = await axios.get(`http://localhost:3000/user/${message.from}`);
+    const res = await axios.get(`http://localhost:3000/user/${message.from._id}`);
     senderInfo = {
         id: res.data.data._id,
         type: 'direct',
-        name: res.data.data.user_name
+        name: res.data.data.user_name,
+        url: res.data.data.avatar_url
     };
     } else {
     senderInfo = {
         id: message.groupId._id,
         type: 'group',
-        name: message.groupId.group_name
+        name: message.groupId.group_name,
+        url: message.groupId.avatar_url
     };
     }
-    setCurrentSender(senderInfo);
 
     // build conversation key for direct, or group id for group
     const conversationId = [user.id, senderInfo.id].sort();
@@ -77,16 +76,16 @@ const ChatPage = () => {
         type: senderInfo.type,
         conversationId: senderInfo.type === 'direct' ? convKey : null,
         groupId: senderInfo.type === 'group'
-          ? { _id: message.groupId._id, group_name: message.groupId.group_name }
+          ? { _id: message.groupId._id, group_name: message.groupId.group_name, avatar_url: message.groupId.avatar_url }
           : null,
         participant: senderInfo.type === 'direct'
           ? [
-              { _id: user.id, user_name: user.name },
-              { _id: senderInfo.id, user_name: senderInfo.name }
+              { _id: user.id, user_name: user.name, avatar_url: user.url},
+              { _id: senderInfo.id, user_name: senderInfo.name, avatar_url: senderInfo.url }
             ]
           : [],
         lastMessage: {
-          from: message.from,
+          from: message.from._id,
           content: message.content,
           createAt: message.createAt
         }
@@ -102,7 +101,7 @@ const ChatPage = () => {
         return [...prev, newEntry];
       }
     });
-  }, [currentSender, setCurrentSender, setReceiveList, setConversationList, user.id, user.name]);
+  }, [currentSender, user.id, user.name, user.url, setReceiveList, setConversationList]);
 
   // attach/detach listener
   useEffect(() => {

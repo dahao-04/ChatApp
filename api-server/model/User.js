@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const UserSchema = new mongoose.Schema({
     user_email: String,
     user_name: {type: String, default: "New User"},
+    avatar_url: {type: String, default: "/uploads/avatars/default.png"},
     user_password: String,
     createAt: {type: Date, default: Date.now}
 })

@@ -2,14 +2,14 @@ import formatTime from '../../helpers/formatTime';
 
 const Inbox = ({user, mess, onClick}) => {
     const time = formatTime(mess.lastMessage.createAt);
-
+    const sender = mess?.participant?.find(p => p._id !== user.id);
     return (
-        <div className="py-4 border-b border-gray-500" onClick={onClick}>
+        <div className="py-4 border-b border-gray-300" onClick={onClick}>
             <div className="flex items-center w-full">
                 <img
                     alt="User avatar"
-                    className="w-10 h-10 rounded-full object-cover shrink-0"
-                    src="https://storage.googleapis.com/a1aa/image/TmPMwC91QCAWv_YdRgZC5bYM4HRnUu40yFAgKL_0r3s.jpg"
+                    className="w-10 h-10 rounded-full object-cover shrink-0 hover:scale-105 duration-200 hover:ring-2 cursor-pointer"
+                    src={`http://localhost:3000${mess.groupId?mess.groupId.avatar_url:sender.avatar_url}`}
                 />
                 <div className="flex flex-col ml-3 w-full overflow-hidden">
                     <div className="font-medium truncate">{

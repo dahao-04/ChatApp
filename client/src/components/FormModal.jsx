@@ -11,7 +11,6 @@ const FormModal = ({title, closeModal, fieldList, func}) => {
     const handleSubmit = (e) => {
         e.preventDefault()
         func(formData);
-        closeModal(false);
     }
 
     return (
@@ -51,8 +50,8 @@ const FormModal = ({title, closeModal, fieldList, func}) => {
                 <button
                     id="submitBtn"
                     type="submit"
-                    className="inline-flex justify-center rounded-md px-4 py-2 bg-blue-600 text-sm font-medium 
-                    text-white hover:bg-blue-700"
+                    className="inline-flex justify-center rounded-md px-4 py-2 text-sm font-medium 
+                    text-white"
                     onClick={handleSubmit}
                 >
                     Done

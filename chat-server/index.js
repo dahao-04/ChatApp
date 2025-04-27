@@ -66,7 +66,7 @@ io.on('connection', (socket) => {
     const message = { type, from, to, groupId, content, createAt };
 
     if(type === 'direct') {
-      const receiverSocketId = users.get(to);
+      const receiverSocketId = users.get(to._id);
       if(receiverSocketId) {
         io.to(receiverSocketId).emit("receive_message", message);
       }

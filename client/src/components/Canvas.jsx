@@ -81,14 +81,14 @@ const Canvas = ({ title, show, onClose, socket }) => {
                 {/* Canvas Panel */}
                 <aside
                     aria-label="Right side canvas panel"
-                    className={`fixed top-0 right-0 h-full w-80 shadow-lg transform transition-transform duration-300 flex flex-col ${
+                    className={`fixed top-3 right-0 h-[750px] w-80 shadow-lg bg-white rounded-lg transform transition-transform duration-300 flex flex-col ${
                         show ? 'translate-x-0' : 'translate-x-full'
                     }`}
                 >
-                    <header className="flex-col justify-items-center p-4 border-b border-gray-300">
+                    <header className="flex-col justify-items-center p-4 border-b border-gray-300 rounded-t-lg">
                         <img 
                             className="w-20 h-20 rounded-full object-cover shrink-0"
-                            src="https://storage.googleapis.com/a1aa/image/TmPMwC91QCAWv_YdRgZC5bYM4HRnUu40yFAgKL_0r3s.jpg" 
+                            src={`http://localhost:3000${currentSender.url}`}
                             alt="" 
                         />
                         <h2 className="text-lg font-semibold text-white">{title}</h2>
@@ -117,7 +117,7 @@ const Canvas = ({ title, show, onClose, socket }) => {
                                                     <div className="flex items-center">
                                                         <img 
                                                             className="w-10 h-10 rounded-full object-cover shrink-0 me-2"
-                                                            src="https://storage.googleapis.com/a1aa/image/TmPMwC91QCAWv_YdRgZC5bYM4HRnUu40yFAgKL_0r3s.jpg" 
+                                                            src={`http://localhost:3000${item.avatar_url}`}
                                                             alt="" 
                                                         />
                                                         <h2 className="text-sm font-medium text-gray-900">{item.user_name}</h2>
@@ -125,7 +125,7 @@ const Canvas = ({ title, show, onClose, socket }) => {
     
                                                     {/* Icon bên phải */}
                                                     <i 
-                                                    className="fas fa-user-minus hover:scale-105 text-red-500" 
+                                                    className="fas fa-user-minus hover:bg-gray-200 rounded-full p-3 text-red-500 cursor-pointer duration-300 transition" 
                                                     onClick={() => deleteUser(item._id)}></i>
                                                 </div>
                                             ))}
@@ -134,7 +134,7 @@ const Canvas = ({ title, show, onClose, socket }) => {
                                                 className="flex items-center w-full text-left px-4 py-2 text-sm text-black"
                                                 onClick={() => setShowModal(true)}
                                             >
-                                                <div className="w-11 h-11 pl-4 pt-3 bg-white rounded-full object-cover shrink-0 me-2">
+                                                <div className="w-11 h-11 pl-4 pt-3 bg-white hover:bg-gray-200 rounded-full rounded-full object-cover shrink-0 me-2 cursor-pointer duration-300 transition">
                                                     <i className="fas fa-user-plus"></i>
                                                 </div>
                                                 <span className="text-sm font-medium text-gray-900">Add</span>

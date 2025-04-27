@@ -4,6 +4,7 @@ import axios from "axios";
 
 import Inbox from "./Inbox";
 import FormModal from "../FormModal";
+import SidebarFooter from "./SidebarFooter";
 import ChatContext from "../../context/chatContext";
 
 const Sidebar = ({ socket }) => {
@@ -40,7 +41,8 @@ const Sidebar = ({ socket }) => {
           setCurrentSender({
             id: other._id,
             type: "direct",
-            name: other.user_name
+            name: other.user_name,
+            url: other.avatar_url
           });
         }
       } catch (error) {
@@ -79,7 +81,8 @@ const Sidebar = ({ socket }) => {
         setCurrentSender({
           id: newGroup._id,
           type: "group",
-          name: newGroup.group_name
+          name: newGroup.group_name,
+          url: newGroup.avatar_url
         });
         setGroupList(prev => [...prev, newGroup]);
 
@@ -87,7 +90,8 @@ const Sidebar = ({ socket }) => {
           type: "group",
           groupId: {
             _id: newGroup._id,
-            group_name: newGroup.group_name
+            group_name: newGroup.group_name,
+            avatar_url: newGroup.avatar_url
           },
           lastMessage: {
             content: `Group created by ${user.name}`,
@@ -138,60 +142,61 @@ const Sidebar = ({ socket }) => {
   }, [searchText, conversationList, user.id]);
 
   return (
-    <aside className="w-1/4">
-      <div className="title p-4 border-b border-gray-200">
+    <aside className="w-1/4 me-3 h-screen">
+      <div className="title h-[7vh] p-4 border-b border-gray-200 rounded-t-lg flex items-center">
         <h1 className="text-xl font-bold">
           Chat App
         </h1>
       </div>
-      <div className="p-4 flex">
+      <div className="p-4 h-[10vh] flex shadow">
         <input 
-            className="w-full p-2 border border-gray-600 rounded me-2" 
+            className="w-full h-full p-2 border border-gray-200 rounded me-2" 
             value={searchText}
             onChange={e => setSearchText(e.target.value)}
             placeholder="Search..."
         />
-        <div className="relative">
-          <button 
-            onClick={() => setToggleBtn(state => !state)}
-            className= 'transition'
-          >
-            <i className={`fas fa-caret-right transition-transform duration-300 ${toggleBtn ? "rotate-90" : ""}`}></i>
-          </button>
-          {toggleBtn && (
-            <ul className="absolute right-0 mt-2 w-48 rounded-xl p-4 shadow-lg z-10 space-y-2">
-              <li className="transition-transform duration-200 hover:scale-105">
-                <button 
-                  className="w-full text-left flex items-center gap-2" 
-                  onClick={() => {setCreateChatModal(true); setToggleBtn(false)}}
-                >
-                  <i className="fas fa-user-friends transition-transform duration-200 hover:scale-110"></i>
-                  <span className="font-medium">Add chat</span>
-                </button>
-              </li>
-              <li className="transition-transform duration-200 hover:scale-105">
-                <button 
-                  className="w-full text-left flex items-center gap-2" 
-                  onClick={() => {setCreateGroupChatModal(true); setToggleBtn(false)}}
-                >
-                  <i className="fas fa-users"></i>
-                  <span className="font-medium">Add group</span>
-                </button>
-              </li>
-              <li className="transition-transform duration-200 hover:scale-105">
-                <button 
-                  className="w-full text-left flex items-center gap-2" 
-                  onClick={handleSignOut}
-                >
-                  <i className="fas fa-sign-out-alt"></i>
-                  <span className="font-medium">Log out</span>
-                </button>
-              </li>
-            </ul>
-          )}
-        </div>
+      <div className="relative">
+        <button 
+        onClick={() => setToggleBtn(state => !state)}
+        className='transition h-full'
+        >
+          <i className={`fas fa-caret-right transition-transform duration-300 ${toggleBtn ? "rotate-90" : ""}`}></i>
+        </button>
+        <ul className={`absolute right-0 mt-2 w-48 rounded-xl p-4 shadow-lg z-10 space-y-2 transition-all 
+          duration-300 transform origin-top-right 
+          ${toggleBtn ? "scale-100 opacity-100 visible" : "scale-95 opacity-0 invisible"}`}>
+            <li className="transition-transform duration-200 hover:scale-105">
+              <button 
+              className="w-full text-left flex items-center gap-2" 
+              onClick={() => {setCreateChatModal(true); setToggleBtn(false)}}
+              >
+                <i className="fas fa-user-friends transition-transform duration-200 hover:scale-110"></i>
+                <span className="font-medium">Add chat</span>
+              </button>
+            </li>
+            <li className="transition-transform duration-200 hover:scale-105">
+              <button 
+              className="w-full text-left flex items-center gap-2" 
+              onClick={() => {setCreateGroupChatModal(true); setToggleBtn(false)}}
+              >
+                <i className="fas fa-users"></i>
+                <span className="font-medium">Add group</span>
+              </button>
+            </li>
+            <li className="transition-transform duration-200 hover:scale-105">
+              <button 
+              className="w-full text-left flex items-center gap-2" 
+              onClick={handleSignOut}
+              >
+                <i className="fas fa-sign-out-alt"></i>
+                <span className="font-medium">Log out</span>
+              </button>
+            </li>
+          </ul>
       </div>
-      <div className="p-4">
+
+      </div>
+      <div className="p-4 h-[72vh] mb-2 rounded-b-lg shadow">
         {filteredList.map((item, idx) => (
             <Inbox
                 key={idx}
@@ -203,19 +208,22 @@ const Sidebar = ({ socket }) => {
                     setCurrentSender({
                     id: other._id,
                     type: "direct",
-                    name: other.user_name
+                    name: other.user_name,
+                    url: other.avatar_url
                     });
                 } else {
                     setCurrentSender({
                     id: item.groupId._id,
                     type: "group",
-                    name: item.groupId.group_name
+                    name: item.groupId.group_name,
+                    url: item.groupId.avatar_url
                     });
                 }
                 }}
             />
             ))}
       </div>
+      <SidebarFooter/>
       {createChatModal && (
         <FormModal 
         title={"Create new chat"}

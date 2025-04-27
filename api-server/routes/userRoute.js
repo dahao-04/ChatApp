@@ -53,6 +53,7 @@ router.post("/", async(req, res) => {
         const newUser = new User({
             user_email: req.body.user_email,
             user_name: req.body.user_name,
+            avatar_url: req.body.avatar_url,
             user_password: req.body.user_password
         })
         const response = await newUser.save();
@@ -68,10 +69,16 @@ router.post("/", async(req, res) => {
 
 router.put("/:id", authToken, async(req, res) => {
     try {
-        const updateUser = new User({
-            user_name: req.body.user_name
-        })
-        const updateRes = await User.findByIdAndUpdate(req.params.id, updateUser, {new: true});
+        const updateFields = {};
+        if (req.body.user_name) updateFields.user_name = req.body.user_name;
+        if (req.body.avatar_url) updateFields.avatar_url = req.body.avatar_url;
+        if (req.body.user_password) updateFields.user_password = req.body.user_password;
+        
+        const updateRes = await User.findByIdAndUpdate(
+            req.params.id,
+            { $set: updateFields },
+            { new: true }
+        );        
         if(!updateRes) {
             res.status(404).json({
                 message: "User not found."

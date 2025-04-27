@@ -9,11 +9,11 @@ router.get("/log/:id", authToken, async(req, res) => {
 
         const messageSendList = await Message.find({ 
             from: req.user.id
-        });
+        }).populate('from').populate('to');
 
         const messageReceiveList = await Message.find({
             to: req.user.id
-        })
+        }).populate('from').populate('to')
 
         res.status(200).json({
             message: "Success",
@@ -30,7 +30,7 @@ router.get("/log/:id", authToken, async(req, res) => {
 
 router.get("/:id", async(req, res) => {
     try {
-        const message = await Message.findById(req.params.id);
+        const message = await Message.findById(req.params.id).populate('from').populate('to');
         if(!message) {
             res.status(404).json({
                 message: "Message not found."

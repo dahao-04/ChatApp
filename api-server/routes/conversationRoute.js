@@ -33,8 +33,8 @@ router.get("/:id", authToken, async(req, res) => {
                                                 {groupId: {$in: groupIds}}
                                             ]
                                             })
-                                            .populate('participant', 'user_name')
-                                            .populate('groupId', 'group_name')
+                                            .populate('participant', 'user_name avatar_url')
+                                            .populate('groupId', 'group_name avatar_url')
                                             .sort({updateAt: -1});
         if(!response) return res.status(404).json({message: "Conversation not found."});
         res.status(200).json({

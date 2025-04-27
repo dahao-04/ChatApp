@@ -25,7 +25,7 @@ const ChatWindow = ({ socket }) => {
         if (currentSender.type === 'direct') {
             return (
             item.type === 'direct' &&
-            (item.to === currentSender.id || item.from === currentSender.id)
+            (item.to._id === currentSender.id || item.from._id === currentSender.id)
             );
         } else {
             return (
@@ -42,11 +42,11 @@ const ChatWindow = ({ socket }) => {
     // Chuẩn bị message
     const message = {
         type: currentSender.type,
-        from: user.id,
-        to: currentSender.type === 'direct' ? currentSender.id : null,
+        from: {_id: user.id, user_name: user.name, avatar_url: user.url},
+        to: currentSender.type === 'direct' ? {_id: currentSender.id, user_name: currentSender.name, avatar_url: currentSender.url} : null,
         groupId: currentSender.type === 'direct'
         ? null
-        : { _id: currentSender.id, group_name: currentSender.name },
+        : { _id: currentSender.id, group_name: currentSender.name, avatar_url: currentSender.url },
         content: text,
         createAt: timestamp
     };
@@ -103,13 +103,13 @@ const ChatWindow = ({ socket }) => {
             conversationId: convKey,
             participant: currentSender.type === 'direct'
                 ? [
-                    { _id: user.id, user_name: user.name },
-                    { _id: currentSender.id, user_name: currentSender.name }
+                    { _id: user.id, user_name: user.name, avatar_url: user.url },
+                    { _id: currentSender.id, user_name: currentSender.name, avatar_url: currentSender.url }
                 ]
                 : [],
             groupId: currentSender.type === 'direct'
                 ? null
-                : { _id: currentSender.id, group_name: currentSender.name },
+                : { _id: currentSender.id, group_name: currentSender.name, avatar_url: currentSender.url },
             lastMessage
             }
         ]);
@@ -120,24 +120,16 @@ const ChatWindow = ({ socket }) => {
     } catch (error) {
         console.error('Lỗi khi gửi hoặc lưu tin nhắn:', error);
     }
-    }, [
-    socket,
-    user.id,
-    user.name,
-    currentSender,
-    conversationList,
-    setConversationList,
-    setSendList
-    ]);
+    }, [currentSender.type, currentSender.id, currentSender.name, currentSender.url, user.id, user.name, user.url, socket, conversationList, setSendList, setConversationList]);
 
     return (
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col shadow">
             <ChatHeader socket={socket}/>
 
             <div className="flex-1 overflow-y-auto p-4">
                 {chatLog.map((msg, idx) =>
-                    msg.from === user.id
-                    ? <SendMess key={idx} mess={msg} />
+                    msg.from._id === user.id
+                    ? <SendMess key={idx} mess={msg} user={user} />
                     : <ReceiveMess key={idx} mess={msg} />
                 )}
             </div>

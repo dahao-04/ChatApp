@@ -4,10 +4,10 @@ const ReceiveMess = ({ mess }) => {
     const time = formatTime(mess.createAt);
     return (
         <div className="flex items-start mb-4">
-            <img alt="User avatar" className="w-10 h-10 rounded-full" height="40" src="https://storage.googleapis.com/a1aa/image/TmPMwC91QCAWv_YdRgZC5bYM4HRnUu40yFAgKL_0r3s.jpg" width="40"/>
+            <img alt="User avatar" className="w-10 h-10 rounded-full" height="40" src={`http://localhost:3000${mess.from.avatar_url}`} width="40"/>
             <div className="ml-3">
-                <div className="bg-white p-3 rounded-lg shadow">
-                    <p>
+                <div className="bg-white p-3 rounded-lg shadow ">
+                    <p className="text-gray-700">
                         {mess.content}
                     </p>
                 </div>

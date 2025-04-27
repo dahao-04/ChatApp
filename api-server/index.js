@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const db = require('./config/db');
 const app = express();
@@ -7,9 +8,12 @@ const groupRoute = require('./routes/groupRoute');
 const messageRoute = require('./routes/messageRoute');
 const authRoute = require('./routes/authRoute');
 const conversationRoute = require('./routes/conversationRoute');
+const uploadRoute = require('./routes/uploadImgRoute');
 
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 db();
 
@@ -18,7 +22,7 @@ app.use('/group', groupRoute);
 app.use('/mess', messageRoute);
 app.use('/conversation', conversationRoute);
 app.use('/auth', authRoute);
-
+app.use('/upload', uploadRoute);
 app.listen(3000, () => {
     console.log("Server is running on port http://localhost:3000");
 })

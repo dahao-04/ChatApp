@@ -70,14 +70,6 @@ input:focus {
     color: white;
     background-color: #3F72AF;
   }
-  footer {
-    color: white;
-    background-color: #DBE2EF;
-  }
-  aside {
-    color: #112D4E;
-    background-color: #DBE2EF;
-  }
   button {
     color: white;
     background-color: #3F72AF;
@@ -91,7 +83,7 @@ input:focus {
   }
 
   ul{
-    background-color: #DBE2EF;
+    background-color: rgb(228, 228, 239);
   }
   li{
     border: #315786

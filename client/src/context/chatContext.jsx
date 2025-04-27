@@ -14,7 +14,14 @@ export const ChatProvider = ({children}) => {
 
     useEffect( () => {
         const token = localStorage.getItem('auth-token');
-        if(token) setUser(jwtDecode(token));
+        // Sửa cái này lại lấy thông tin từ database
+        if(token) {
+            axios.get(`http://localhost:3000/user/${jwtDecode(token).id}`)
+            .then(res => {
+                setUser({id: res.data.data._id, name: res.data.data.user_name, url: res.data.data.avatar_url})
+            })
+            .catch(err => console.log("Error: ", err));
+        }
         axios.get(`http://localhost:3000/mess/log/${user.id}`,{
             headers: {"auth-token": token}
         })
@@ -43,6 +50,7 @@ export const ChatProvider = ({children}) => {
             currentSender, 
             setCurrentSender, 
             user,
+            setUser,
             conversationList,
             setConversationList,
             groupList,

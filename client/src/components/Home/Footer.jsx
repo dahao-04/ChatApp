@@ -1,6 +1,6 @@
 const Footer = () => {
     return (
-        <footer className="bg-gray-800 text-white p-4 mt-12">
+        <footer className="bg-gray-800 text-white p-4 mt-12 rounded-b-lg">
             <div className="mx-auto text-center">
             <p>
             © 2023 Chat App. All rights reserved.

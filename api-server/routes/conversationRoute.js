@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+const AppError = require('../utils/AppError');
+
 const Conversation = require('../model/Conversation');
 const Group = require('../model/Group');
 
@@ -8,21 +10,21 @@ const { authToken } = require('../middleware/authMiddleware');
 const { generateConversationId } = require('../middleware/generateId');
 
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
     try {
         const response = await Conversation.find();
-        if(response.length === 0) return res.status(404).json({message: "Get conversation not found."});
+        if(response.length === 0) return next(new AppError("No conversation was found.", 404));
         res.status(200).json({
+            success: true,
             message: "Success.",
             data: response
         })
     } catch (error) {
-        res.status(500).json({message: "External error."})
-        console.log(error);
+        return next(new AppError("External Server Error.", 500))
     }
 })
 
-router.get("/:id", authToken, async(req, res) => {
+router.get("/:id", authToken, async(req, res, next) => {
     try {
         const groupConversation = await Group.find({members_id: req.user.id}, {_id: 1});
         const groupIds = groupConversation.map(g => g._id);
@@ -36,35 +38,35 @@ router.get("/:id", authToken, async(req, res) => {
                                             .populate('participant', 'user_name avatar_url')
                                             .populate('groupId', 'group_name avatar_url')
                                             .sort({updateAt: -1});
-        if(!response) return res.status(404).json({message: "Conversation not found."});
+        if(!response) return next(new AppError("Conversation not found.", 404))
         res.status(200).json({
+            success: true,
             message: "Success.",
             data: response
         })
 
     } catch (error) {
-        res.status(500).json({message: "External error."})
-        console.log(error);
+        return next(new AppError("External Server Error.", 500))
     }
 })
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res, next) => {
     try {
        const newConversation = req.body;
+       if(!newConversation) return next(new AppError("Required data.", 400));
        if(newConversation.type === 'direct') {
             const conversationId = generateConversationId(newConversation.participant);
             newConversation.conversationId = conversationId;
        }
        const conversation = new Conversation(newConversation);
        await conversation.save();
-       res.status(200).json({message: "Conservation is created.", data: newConversation});
+       res.status(200).json({success: true, message: "Conservation is created.", data: newConversation});
     } catch (error) {
-        res.status(500).json({message: "External error."})
-        console.log(error); 
+        return next(new AppError("External Server Error.", 500))
     }
 })
 
-router.put("/", async (req, res) => {
+router.put("/", async (req, res, next) => {
     try {
         const filter = {};
         if (req.body.conversationId) filter.conversationId = req.body.conversationId;
@@ -81,22 +83,20 @@ router.put("/", async (req, res) => {
                 }
             }, 
             {new:true});
-        if(!response) return res.status(404).json({message: "Can not update."})
-        res.status(200).json({message: "Update success.", data: response});
+        if(!response) return next(new AppError("Can not find conversation to update.", 404));
+        res.status(200).json({success: true, message: "Update success.", data: response});
     } catch (error) {
-        res.status(500).json({message: "External error."})
-        console.log(error); 
+        return next(new AppError("External Server Error.", 500));
     }
 })
 
-router.delete("/:id", async(req, res) => {
+router.delete("/:id", async(req, res, next) => {
     try {
         const response = await Conversation.findByIdAndDelete(req.params.id);
-        if(!response) res.status(402).json({message: "Can not delete."})
-        res.status(200).json({message: "Update success.", data: response});
+        if(!response) return next(new AppError("Conversation not found.", 404));
+        res.status(200).json({success: true, message: "Update success.", data: response});
     } catch (error) {
-        res.status(500).json({message: "External error."})
-        console.log(error); 
+        return next(new AppError("External Server Error.", 500));
     }
 })
 

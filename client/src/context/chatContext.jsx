@@ -11,6 +11,7 @@ export const ChatProvider = ({children}) => {
     const [user, setUser] = useState({});
     const [conversationList, setConversationList] = useState([]);
     const [groupList, setGroupList] = useState([]);
+    const [notifi, setNotifi] = useState({show: false, status: false, message: ""});
 
     useEffect( () => {
         const token = localStorage.getItem('auth-token');
@@ -54,7 +55,9 @@ export const ChatProvider = ({children}) => {
             conversationList,
             setConversationList,
             groupList,
-            setGroupList
+            setGroupList,
+            notifi, 
+            setNotifi
         }}>
             {children}
         </ChatContext.Provider>

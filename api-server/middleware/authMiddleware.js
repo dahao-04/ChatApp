@@ -1,5 +1,6 @@
 const User = require('../model/User');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 const SECRET_KEY = process.env.SECRET_KEY;
@@ -18,4 +19,15 @@ const authToken = (req, res, next) => {
     })
 }
 
-module.exports = { authToken, generateToken };
+const hashPassword = async (password) => {
+    const salt = 10;
+    const hashedPass = await bcrypt.hash(password, salt);
+    return hashedPass;
+}
+
+const verifyPassword = async (plainPass, hashedPass) => {
+    const isMatch = await bcrypt.compare(plainPass, hashedPass);
+    return isMatch;
+}
+
+module.exports = { authToken, generateToken, hashPassword, verifyPassword };

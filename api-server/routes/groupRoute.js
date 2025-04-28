@@ -1,76 +1,71 @@
 const express = require('express');
 const router = express.Router();
+const AppError = require('../utils/AppError');
 const Group = require('../model/Group');
 
-router.get("/", async(req, res) => {
+router.get("/", async(req, res, next) => {
     try {
         const groupList = await Group.find();
+        if(!groupList) return next(new AppError("No group was found.", 404));
         res.status(200).json({
+            success: true,
             message: "Success",
             data: groupList
         }) 
     } catch (error) {
-        
+        return next(new AppError("External Server Error.", 500));
     }
 })
 
-router.get("/user/:id", async(req, res) => {
+router.get("/user/:id", async(req, res, next) => {
     try {
         const groups = await Group.find({members_id: req.params.id});
-        if(!groups) {
-            res.status(404).json({
-                message: "No group not found."
-            }) 
-        }
+        if(!groups) return next(new AppError("No group was found.", 404));
         res.status(200).json({
+            success: true,
             message: "Success",
             data: groups
         })
     } catch (error) {
-        
+        return next(new AppError("External Server Error.", 500))
     }
 })
 
-router.get("/:id", async(req, res) => {
+router.get("/:id", async(req, res, next) => {
     try {
         const group = await Group.findById(req.params.id).populate('members_id');
-        if(!group) {
-            res.status(404).json({
-                message: "Group not found."
-            }) 
-        }
+        if(!group) return next(new AppError("No group was found.", 404));
         res.status(200).json({
+            success: true,
             message: "Success",
             data: group
         })
     } catch (error) {
-        
+        return next(new AppError("External Server Error.", 500))
     }
 })
 
-router.post("/", async(req, res) => {
+router.post("/", async(req, res, next) => {
     try {
         const newGroup = new Group(req.body);
+        if(!newGroup) return next(new AppError("Required data.", 400));
         await newGroup.save();
         res.status(201).json({
+            success: true,
             message: "Group created.",
             data: newGroup
         })
     } catch (error) {
-        
+        return next(new AppError("External Server Error.", 500));
     }
 })
 
-router.post("/members/:id", async (req, res) => {
+router.post("/members/:id", async (req, res, next) => {
     try {
         const currentGroup = await Group.findById(req.params.id);
-        if (!currentGroup) {
-            return res.status(404).json({ message: "Group not found." });
-        }
+        if (!currentGroup) return next(new AppError("No group was found.", 404));
 
-        if (req.body.members_id === undefined) {
-            return res.status(400).json({ message: "members_id is required." });
-        }
+        if (req.body.members_id === undefined) return next(new AppError("Members id is required.", 400));
 
         const newMembers = Array.isArray(req.body.members_id)
             ? req.body.members_id
@@ -82,16 +77,16 @@ router.post("/members/:id", async (req, res) => {
         const updateRes = await currentGroup.save();
 
         res.status(200).json({
+            success: true,
             message: "Members added to group.",
             data: updateRes
         });
     } catch (error) {
-        console.error("Add member error:", error);
-        res.status(500).json({ message: "Internal server error." });
+        return next(new AppError("External Server Error.", 500));
     }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", async (req, res, next) => {
     try {
         const updateGroup = {};
         const allowUpdate = ["group_name", "host_id", "lastMessageSeq"];
@@ -104,30 +99,24 @@ router.put("/:id", async (req, res) => {
 
         const updateRes = await Group.findByIdAndUpdate(req.params.id, updateGroup, { new: true });
 
-        if (!updateRes) {
-            return res.status(404).json({ message: "Group not found." });
-        }
+        if (!updateRes) return next(new AppError("No group was found.", 404));
 
         res.status(200).json({
+            success: true,
             message: "Group info updated.",
             data: updateRes
         });
     } catch (error) {
-        console.error("Update error:", error);
-        res.status(500).json({ message: "Internal server error." });
+        return next(new AppError("External Server Error.", 500));
     }
 });
 
-router.delete("/members/:id", async (req, res) => {
+router.delete("/members/:id", async (req, res, next) => {
     try {
         const currentGroup = await Group.findById(req.params.id);
-        if (!currentGroup) {
-            return res.status(404).json({ message: "Group not found." });
-        }
+        if (!currentGroup) return next(new AppError("Group not found.", 404));
 
-        if (req.body.members_id === undefined) {
-            return res.status(400).json({ message: "members_id is required." });
-        }
+        if (req.body.members_id === undefined) return next(new AppError("members_id is required.", 400));
 
         const membersToRemove = Array.isArray(req.body.members_id)
             ? req.body.members_id
@@ -141,30 +130,26 @@ router.delete("/members/:id", async (req, res) => {
         const updateRes = await currentGroup.save();
 
         res.status(200).json({
+            success: true,
             message: "Members removed from group.",
             data: updateRes
         });
     } catch (error) {
-        console.error("Remove member error:", error);
-        res.status(500).json({ message: "Internal server error." });
+        return next(new AppError("External Server Error.", 500));
     }
 });
 
-
-router.delete("/:id", async(req, res) => {
+router.delete("/:id", async(req, res, next) => {
     try {
         const deleteRes = await Group.findByIdAndDelete(req.params.id);
-        if(!deleteRes) {
-            res.status(404).json({
-                message: "Group not found."
-            })
-        }
+        if(!deleteRes) return next( new AppError("Group not found.", 404));
         res.status(200).json({
+            success: true,
             message: "Group deleted.",
             data: deleteRes
         })
     } catch (error) {
-        
+        return next(new AppError("External Server Error.", 500));
     }
 })
 

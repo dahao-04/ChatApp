@@ -77,21 +77,17 @@ const SidebarFooter = () => {
             fieldList: ['current', 'new'],
             func: async (formData) => {
                 try {
-                    const response = await axios.get(`http://localhost:3000/user/${user.id}`);
-                    if(formData.current === response.data.data.user_password) {
-                        const updateUser = await axios.put(`http://localhost:3000/user/${user.id}`,
-                            { user_password: formData.new },
-                            { headers: {
-                                "auth-token": token
-                            } }
-                        )
-                        if(updateUser) {
-                            setOpenModal(false);
+                    await axios.post(`http://localhost:3000/auth/changePass/${user.id}`,
+                        {
+                            current_password: formData.current,
+                            new_password: formData.new
                         }
-                    }else {
-                        alert("Wrong password.")
-                    }
+                    );
+    
+                    setOpenModal(false);
+
                 } catch (error) {
+                    alert("Password not match")
                     console.error("Update password failed: ", error)
                 }
             }

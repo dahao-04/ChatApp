@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import Sidebar from '../components/Chat/Sidebar';
 import ChatWindow from '../components/Chat/ChatWindow';
+import Notification from '../components/Notification';
 
 import ChatContext from '../context/chatContext';
 
@@ -13,7 +14,8 @@ const ChatPage = () => {
     user,
     setReceiveList,
     setConversationList,
-    groupList
+    groupList,
+    notifi
   } = useContext(ChatContext);
 
   const [socket, setSocket] = useState(null);
@@ -130,6 +132,7 @@ const ChatPage = () => {
             </div>
           </div>
       }
+      <Notification show={notifi.show} status={notifi.status} message={notifi.message}/>
     </div>
   );
 };

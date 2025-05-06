@@ -30,7 +30,8 @@ This repository contains a real-time chat application built with Node.js, Expres
 - Real-time one-to-one and group messaging 💬
 - Message history stored in MongoDB 🗄️
 - Responsive UI with React 📱
-
+- Upload avatar
+- Change name, password
 ---
 
 ## 🛠️ Tech Stack
@@ -161,10 +162,11 @@ chat-app/
 
 ### Auth
 
-| Method | Endpoint       | Description              |
-| ------ | -------------- | ------------------------ |
-| POST   | `/auth/signup` | Register a new user      |
-| POST   | `/auth/login`  | Authenticate and get JWT |
+| Method | Endpoint                | Description              |
+| ------ | ----------------------- | ------------------------ |
+| POST   | `/auth/signup`          | Register a new user      |
+| POST   | `/auth/login`           | Authenticate and get JWT |
+| POST   | `/auth/changePass/:id`  | Change user password     |
 
 ### Conversation
 

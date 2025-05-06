@@ -29,7 +29,7 @@ router.get("/log/:id", authToken, async(req, res, next) => {
     }
 })
 
-router.get("/:id", async(req, res, next) => {
+router.get("/:id", authToken, async(req, res, next) => {
     try {
         const message = await Message.findById(req.params.id).populate('from').populate('to');
         if(!message) return next( new AppError("No message was found.", 404));
@@ -43,7 +43,7 @@ router.get("/:id", async(req, res, next) => {
     }
 })
 
-router.post("/", async(req, res, next) => {
+router.post("/", authToken, async(req, res, next) => {
     try {
         //Sửa lại tạo mess cụ thể để làm xác định lỗi
         const newMess = new Message(req.body);
@@ -59,7 +59,7 @@ router.post("/", async(req, res, next) => {
     }
 })
 
-router.delete("/:id", async(req, res, next) => {
+router.delete("/:id", authToken, async(req, res, next) => {
     try {
         const deleteRes = await Message.findByIdAndDelete(req.params.id);
         if(!deleteRes) return next( new AppError("Message not found.", 404));

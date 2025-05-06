@@ -10,7 +10,7 @@ const { authToken } = require('../middleware/authMiddleware');
 const { generateConversationId } = require('../middleware/generateId');
 
 
-router.get("/", async (req, res, next) => {
+router.get("/", authToken, async (req, res, next) => {
     try {
         const response = await Conversation.find();
         if(response.length === 0) return next(new AppError("No conversation was found.", 404));
@@ -50,7 +50,7 @@ router.get("/:id", authToken, async(req, res, next) => {
     }
 })
 
-router.post("/", async (req, res, next) => {
+router.post("/", authToken, async (req, res, next) => {
     try {
        const newConversation = req.body;
        if(!newConversation) return next(new AppError("Required data.", 400));
@@ -66,7 +66,7 @@ router.post("/", async (req, res, next) => {
     }
 })
 
-router.put("/", async (req, res, next) => {
+router.put("/", authToken, async (req, res, next) => {
     try {
         const filter = {};
         if (req.body.conversationId) filter.conversationId = req.body.conversationId;
@@ -90,7 +90,7 @@ router.put("/", async (req, res, next) => {
     }
 })
 
-router.delete("/:id", async(req, res, next) => {
+router.delete("/:id", authToken, async(req, res, next) => {
     try {
         const response = await Conversation.findByIdAndDelete(req.params.id);
         if(!response) return next(new AppError("Conversation not found.", 404));

@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const db = require('./config/db');
+const cookieParser = require('cookie-parser');
 const app = express();
 const AppError = require('./utils/AppError');
 const errorHandler = require('./middleware/errorHandler');
@@ -14,6 +15,7 @@ const uploadRoute = require('./routes/uploadImgRoute');
 
 
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

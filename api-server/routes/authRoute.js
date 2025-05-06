@@ -3,7 +3,8 @@ const router = express.Router();
 
 const User = require('../model/User');
 const AppError = require('../utils/AppError');
-const { generateToken, verifyPassword, hashPassword } = require('../middleware/authMiddleware');
+const { generateToken, generateRefreshToken, createRefreshToken, verifyRefreshToken, verifyPassword, hashPassword } = require('../middleware/authMiddleware');
+const RefreshToken = require('../model/RefreshToken');
 
 router.post('/login', async(req, res, next) => {
     const user = await User.findOne({user_email: req.body.user_email});
@@ -16,9 +17,45 @@ router.post('/login', async(req, res, next) => {
             return next(new AppError('Password not match.', 401));
         }
         const token = generateToken(user);
+        const refreshToken = generateRefreshToken(user);
+
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'Strict',
+            maxAge: 7*24*60*60*1000
+        });
+
         req.user = user;
-        res.status(200).json({success: true, message: "Login success.", token: token});
+
+        res.status(200).json({success: true, message: "Login success.", token: token, refreshToken: refreshToken});
 })
+
+router.post('/logout', async(req, res, next) => {
+    try {
+        const refreshToken = req.cookies.refreshToken;
+        if(!refreshToken) return next(new AppError("Can not find refresh token.", 401));
+        const isVerify = await verifyRefreshToken(refreshToken);
+        res.clearCookie('refreshToken', {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'Strict'
+        })
+        const saveToken = new RefreshToken ({
+            token: refreshToken,
+            userId: isVerify.id,
+            expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+            createAt: new Date()
+        })
+        const response = await saveToken.save();
+        if(true) res.status(200).json({message: "Success."})
+
+    } catch (error) {
+        return next(new AppError("Invalid refresh token.", 401));
+    }
+})
+
+router.post('/refresh', createRefreshToken);
 
 router.post('/signup', async(req, res, next) => {
     const { user_name, user_email, user_password } = req.body;

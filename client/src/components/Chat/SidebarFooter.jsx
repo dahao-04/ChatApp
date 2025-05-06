@@ -4,7 +4,7 @@ import chatContext from '../../context/chatContext';
 import FormModal from '../FormModal';
 
 const SidebarFooter = () => {
-    const { user, setUser } = useContext(chatContext);
+    const { user, setUser, setNotifi } = useContext(chatContext);
     const [toggleBtn, setToggleBtn] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [modalConfig, setModalConfig] = useState({ title: '', fieldList: [], func: () => {} });
@@ -34,10 +34,12 @@ const SidebarFooter = () => {
                 } 
             );
             if(updateUser) {
+                setNotifi({show: true, status: true, message: "Cool avatar updated."})
                 setOpenModal(false);
                 setUser(prev => ({ ...prev, url: avatarUrl }));
             }
         } catch (err) {
+            setNotifi({show: true, status: false, message: err.response.data.message})
             console.error("Upload failed:", err);
         }
     };
@@ -48,22 +50,28 @@ const SidebarFooter = () => {
             fieldList: ['name'],
             func: async (formData) => {
                 try {
-                    const updateUser = await axios.put(
-                        `http://localhost:3000/user/${user.id}`, 
-                        {
-                            user_name: formData.name
-                        },
-                        {
-                            headers: {
-                                'auth-token': token
+                    if(!formData.name) {
+                        setNotifi({ show: true, status: false, message: "Enter your new name."})
+                    } else {
+                        const updateUser = await axios.put(
+                            `http://localhost:3000/user/${user.id}`, 
+                            {
+                                user_name: formData.name
+                            },
+                            {
+                                headers: {
+                                    'auth-token': token
+                                }
                             }
+                        );
+                        if(updateUser) {
+                            setNotifi({ show: true, status: true, message: "It's a beautiful name!"})
+                            setOpenModal(false);
+                            setUser(prev => ({ ...prev, name: formData.name }));
                         }
-                    );
-                    if(updateUser) {
-                        setOpenModal(false);
-                        setUser(prev => ({ ...prev, name: formData.name }));
                     }
                 } catch (err) {
+                    setNotifi({show: true, message: err.response.data.message})
                     console.error("Upload failed:", err);
                 }
             }
@@ -77,17 +85,21 @@ const SidebarFooter = () => {
             fieldList: ['current', 'new'],
             func: async (formData) => {
                 try {
-                    await axios.post(`http://localhost:3000/auth/changePass/${user.id}`,
-                        {
-                            current_password: formData.current,
-                            new_password: formData.new
-                        }
-                    );
-    
-                    setOpenModal(false);
+                    if(formData.current === formData.new) {
+                        setNotifi({show: true, status: false, message: "It's look similar..."})
+                    } else {
+                        await axios.post(`http://localhost:3000/auth/changePass/${user.id}`,
+                            {
+                                current_password: formData.current,
+                                new_password: formData.new
+                            }
+                        );
+                        setNotifi({show: true, status: true, message:"Your security upgraded!"})
+                        setOpenModal(false);
+                    }
 
                 } catch (error) {
-                    alert("Password not match")
+                    setNotifi({show: true, status: false, message: error.response.data.message})
                     console.error("Update password failed: ", error)
                 }
             }
@@ -96,7 +108,7 @@ const SidebarFooter = () => {
     };
 
     return (
-        <div className="border h-[9vh] flex items-center justify-end p-4 bg-white rounded-lg relative">
+        <div className="border h-[10vh] flex items-center justify-end p-4 bg-white rounded-lg relative">
             <span className="me-2 font-normal italic">Welcome back <strong>{user.name}</strong>!</span>
 
             <img 

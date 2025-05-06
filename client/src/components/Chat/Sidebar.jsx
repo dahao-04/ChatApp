@@ -7,14 +7,18 @@ import FormModal from "../FormModal";
 import SidebarFooter from "./SidebarFooter";
 import ChatContext from "../../context/chatContext";
 
-const Sidebar = ({ socket }) => {
+const Sidebar = () => {
   const navigate = useNavigate();
   const {
     user,
+    socket,
+    onlineUsers,
     conversationList,
     setCurrentSender,
     setConversationList,
-    setGroupList
+    setGroupList,
+    setNotifi,
+    isLoading
   } = useContext(ChatContext);
 
   const [createChatModal, setCreateChatModal] = useState(false);
@@ -27,7 +31,6 @@ const Sidebar = ({ socket }) => {
 
   // Lấy token và cấu hình chung cho axios
   const token = localStorage.getItem("auth-token");
-
   // 1. Tạo chat 1-1
   const handleCreateChat = useCallback(
     async (formData) => {
@@ -42,15 +45,18 @@ const Sidebar = ({ socket }) => {
             id: other._id,
             type: "direct",
             name: other.user_name,
+            persence: "offline",
             url: other.avatar_url
           });
         }
       } catch (error) {
+        setNotifi({ show: true, status: false, message: error.response.data.message })
         console.error("User not found:", error);
       } finally {
         setCreateChatModal(false);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [user.id, setCurrentSender, token]
   );
 
@@ -81,6 +87,7 @@ const Sidebar = ({ socket }) => {
         setCurrentSender({
           id: newGroup._id,
           type: "group",
+          persence: "",
           name: newGroup.group_name,
           url: newGroup.avatar_url
         });
@@ -111,12 +118,14 @@ const Sidebar = ({ socket }) => {
           userList: groupPayload.members_id.filter(u => u !== user.id),
           groupId: newGroup._id
         });
+
       } catch (error) {
-        console.error("Lỗi khi tạo group:", error);
+        setNotifi({show: true, status: false, message: error.response.data.message})
       } finally {
         setCreateGroupChatModal(false);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [user.id, user.name, setCurrentSender, setGroupList, setConversationList, socket, token]
   );
 
@@ -142,7 +151,7 @@ const Sidebar = ({ socket }) => {
   }, [searchText, conversationList, user.id]);
 
   return (
-    <aside className="w-1/4 me-3 h-screen">
+  <aside className="w-1/4 me-3 h-screen">
       <div className="title h-[7vh] p-4 border-b border-gray-200 rounded-t-lg flex items-center">
         <h1 className="text-xl font-bold">
           Chat App
@@ -196,34 +205,44 @@ const Sidebar = ({ socket }) => {
       </div>
 
       </div>
-      <div className="p-4 h-[72vh] mb-2 rounded-b-lg shadow">
-        {filteredList.map((item, idx) => (
-            <Inbox
-                key={idx}
-                user={user}
-                mess={item}
-                onClick={() => {
-                if (item.type === "direct") {
-                    const other = item.participant.find(p => p._id !== user.id);
-                    setCurrentSender({
-                    id: other._id,
-                    type: "direct",
-                    name: other.user_name,
-                    url: other.avatar_url
-                    });
-                } else {
-                    setCurrentSender({
-                    id: item.groupId._id,
-                    type: "group",
-                    name: item.groupId.group_name,
-                    url: item.groupId.avatar_url
-                    });
-                }
-                }}
-            />
-            ))}
-      </div>
-      <SidebarFooter/>
+      {isLoading ? (
+        <div className="h-[81vh] flex items-center justify-center">
+          <img src="/loading.gif" alt="Loading..." />
+        </div>
+      ) : (
+        <>
+          <div className="p-4 h-[72vh] mb-2 rounded-b-lg shadow">
+          {filteredList.map((item, idx) =>
+            (<Inbox
+                  key={idx}
+                  user={user}
+                  mess={item}
+                  presence={item.type === 'direct' ? onlineUsers.includes(item.participant.find(p => p._id !== user.id)._id) ? 'online' : 'offline' : ''}
+                  onClick={() => {
+                  if (item.type === "direct") {
+                      const other = item.participant.find(p => p._id !== user.id);
+                      setCurrentSender({
+                        id: other._id,
+                        type: "direct",
+                        persence: onlineUsers.includes(other._id) ? 'online' : 'offline',
+                        name: other.user_name,
+                        url: other.avatar_url
+                      });
+                  } else {
+                      setCurrentSender({
+                        id: item.groupId._id,
+                        type: "group",
+                        name: item.groupId.group_name,
+                        url: item.groupId.avatar_url
+                      });
+                  }
+                  }}
+              />))}
+          </div>
+          <SidebarFooter/>
+        </>
+      )}
+
       {createChatModal && (
         <FormModal 
         title={"Create new chat"}

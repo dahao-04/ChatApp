@@ -12,7 +12,7 @@ const ChatFooter = ({ sendMess }) => {
         }
     };
     return (
-        <footer className="p-4 border-t border-gray-200 rounded-lg">
+        <footer className="p-4 border border-gray-200 rounded-lg">
             <div className="flex items-center">
                 <input 
                 className="w-full p-2 border border-gray-300 rounded" 

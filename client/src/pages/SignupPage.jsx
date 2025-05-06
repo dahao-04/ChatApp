@@ -1,23 +1,34 @@
-import Form from '../components/Form';
 import axios from 'axios';
 
+import { useContext } from 'react';
+import ChatContext from '../context/chatContext';
+import Login from '../components/Login';
+
 const SignupPage = () => {
+    const { setNotifi } = useContext(ChatContext);
     const type = "sign up";
-    const fields = ["email", "name", "password", "Re-enter Password"];
+    const fields = ["email", "name", "password", "repassword"];
     const func = async (formData) => {
-        console.log("form from sign up", formData)
-        const response = await axios.post('http://localhost:3000/auth/signup', {
-            user_email: formData.email,
-            user_name: formData.name,
-            user_password: formData.password
-        });
-        if(response.data){
-            localStorage.setItem('auth-token', response.data.token);
-            setTimeout(window.location.href= ("/chat"), 1000);
+        try {
+            if(formData.repassword !== formData.password) {
+                setNotifi({show: true, status: false, message: "Not match with password."})
+            } else {
+                const response = await axios.post('http://localhost:3000/auth/signup', {
+                    user_email: formData.email,
+                    user_name: formData.name,
+                    user_password: formData.password
+                });
+                if(response.data){
+                    localStorage.setItem('auth-token', response.data.token);
+                    setTimeout(window.location.href= ("/chat"), 200);
+                }
+            }
+        } catch (error) {
+            setNotifi({show: true, status: false, message: error.response.data.message})
         }
     }
     return (
-        <Form type={type} fields={fields} func={func}/>
+        <Login type={type} fields={fields} func={func}/>
     );
 }
 

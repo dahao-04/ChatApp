@@ -7,9 +7,10 @@ import ReceiveMess from "./ReceiveMess";
 import SendMess from "./SendMess";
 import ChatContext from '../../context/chatContext';
 
-const ChatWindow = ({ socket }) => {
+const ChatWindow = () => {
     const {
     user,
+    socket,
     sendList,
     setSendList,
     receiveList,
@@ -123,7 +124,7 @@ const ChatWindow = ({ socket }) => {
     }, [currentSender.type, currentSender.id, currentSender.name, currentSender.url, user.id, user.name, user.url, socket, conversationList, setSendList, setConversationList]);
 
     return (
-        <div className="flex-1 flex flex-col shadow">
+        <div className="flex-1 flex flex-col shadow rounded-lg">
             <ChatHeader socket={socket}/>
 
             <div className="flex-1 overflow-y-auto p-4">

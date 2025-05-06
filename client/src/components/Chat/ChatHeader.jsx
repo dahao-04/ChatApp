@@ -9,25 +9,26 @@ const ChatHeader = ({socket}) => {
     return (
         <header className="flex items-center justify-between p-4 border-b bg-[#3F72AF] rounded-t-lg">
             <div className="flex items-center bg-[#3F72AF]">
-                <img 
-                    alt="Current chat user avatar" 
-                    className="w-10 h-10 rounded-full" 
-                    height="40" 
-                    src={`http://localhost:3000${currentSender.url}`}
-                    width="40"
-                />
+                <div className='relative'>
+                    <img
+                        alt="Current chat user avatar"
+                        className="w-10 h-10 rounded-full"
+                        height="40"
+                        src={`http://localhost:3000${currentSender.url}`}
+                        width="40"
+                    />
+                    <span className={`absolute rounded-full w-3 h-3 right-0 bottom-0
+                        ${currentSender.type === 'direct' ? currentSender.persence === 'online' ? 'bg-green-500' : 'bg-gray-400' : 'hidden'}`}></span>
+                </div>
                 <div className="ml-3 bg-[#3F72AF]">
                     <p className="font-medium">
                         {currentSender.name}
-                    </p>
-                    <p className="text-sm">
-                        Online
                     </p>
                 </div>
             </div>
             <div className="flex items-center space-x-4">
                 <button
-                    className="rounded-none focus:outline-none"
+                    className="focus:outline-none"
                     onClick={() => setShowCanvas(true)}
                 >
                     <i className="fas fa-ellipsis-v"></i>

@@ -14,7 +14,7 @@ const FormModal = ({title, closeModal, fieldList, func}) => {
     }
 
     return (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-10">
             <div className="bg-white rounded-2xl shadow-2xl transform transition-all w-full max-w-md mx-4">
                 <div className="px-6 py-5">
                 <h3 className="text-xl font-semibold text-gray-900 text-center mb-4" id="modal-title">

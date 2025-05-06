@@ -1,7 +1,12 @@
 import {Link} from 'react-router-dom';
-import {useState} from 'react';
+import {useState, useContext} from 'react';
 
-const Form = ({type, fields, func}) => {
+import ChatContext from '../context/chatContext';
+import Notification from './Notification';
+
+const Login = ({type, fields, func}) => {
+    const { notifi, setNotifi } = useContext(ChatContext);
+
     const capital = (string) => {
         if (!string) return '';
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -44,6 +49,7 @@ const Form = ({type, fields, func}) => {
                                 className="w-full p-2 border border-gray-300 rounded" 
                                 id={field} 
                                 name={field} 
+                                type={field === "repassword" ? "password" : field}
                                 required
                                 onChange={handleChange}/>
                             </div>
@@ -85,8 +91,9 @@ const Form = ({type, fields, func}) => {
                     </div>
                 )}
             </div>
+            <Notification notifi = {notifi} setNotifi = {setNotifi}/>
         </div>
     );
 }
 
-export default Form;
+export default Login;

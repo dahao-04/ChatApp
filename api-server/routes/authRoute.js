@@ -12,7 +12,7 @@ router.post('/login', async(req, res, next) => {
         }
 
         const isMatch = await verifyPassword(req.body.user_password, user.user_password);
-        if(!isMatch) {
+    if(!isMatch) {
             return next(new AppError('Password not match.', 401));
         }
         const token = generateToken(user);

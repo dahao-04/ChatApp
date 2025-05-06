@@ -11,19 +11,20 @@ const io = new Server(server, {
   }
 });
 
-let users = new Map();
+let onlineUsers = new Map();
 io.on('connection', (socket) => {
 
   console.log(`User connected: ${socket.id}`);
 
   socket.on('register', (userId) => {
-    users.set(userId, socket.id);
+    onlineUsers.set(userId, socket.id);
+    io.emit('presence:update', Array.from(onlineUsers.keys()));
   })
 
   socket.on('add-to-group', ({userList, groupId}) => {
     if(userList.length > 0) {
       userList.forEach((user) => {
-        const socketId = users.get(user);
+        const socketId = onlineUsers.get(user);
         if(socketId) {
           io.in(socketId).socketsJoin(groupId)
           console.log(`User ${socketId} joined group ${groupId}.`);
@@ -35,7 +36,7 @@ io.on('connection', (socket) => {
   socket.on('delete-from-group', ({userList, groupId}) => {
     if(userList.length > 0) {
       userList.forEach((user) => {
-        const socketId = users.get(user);
+        const socketId = onlineUsers.get(user);
         if(socketId) {
           io.in(socketId).socketsLeave(groupId)
           console.log(`User ${socketId} leave group ${groupId}.`);
@@ -66,7 +67,7 @@ io.on('connection', (socket) => {
     const message = { type, from, to, groupId, content, createAt };
 
     if(type === 'direct') {
-      const receiverSocketId = users.get(to._id);
+      const receiverSocketId = onlineUsers.get(to._id);
       if(receiverSocketId) {
         io.to(receiverSocketId).emit("receive_message", message);
       }
@@ -77,6 +78,13 @@ io.on('connection', (socket) => {
   
 
   socket.on('disconnect', () => {
+    for (const [uid, sid] of onlineUsers.entries()) {
+      if (sid === socket.id) {
+        onlineUsers.delete(uid);
+        break;
+      }
+    }
+    io.emit('presence:update', Array.from(onlineUsers.keys()));
     console.log(`User disconnected: ${socket.id}`);
   });
 });

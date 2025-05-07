@@ -26,12 +26,12 @@ This repository contains a real-time chat application built with Node.js, Expres
 
 ## 🚀 Features
 
-- User registration & login with JWT-based authentication 🔑
+- User registration & login with JWT-based authentication (access token & refresh token) 🔑
 - Real-time one-to-one and group messaging 💬
 - Message history stored in MongoDB 🗄️
 - Responsive UI with React 📱
-- Upload avatar
-- Change name, password
+- Upload user, group avatar
+- Change user name, group name, password
 ---
 
 ## 🛠️ Tech Stack

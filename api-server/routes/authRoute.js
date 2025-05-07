@@ -3,7 +3,7 @@ const router = express.Router();
 
 const User = require('../model/User');
 const AppError = require('../utils/AppError');
-const { generateToken, generateRefreshToken, createRefreshToken, verifyRefreshToken, verifyPassword, hashPassword } = require('../middleware/authMiddleware');
+const { authToken, generateToken, generateRefreshToken, createRefreshToken, verifyRefreshToken, verifyPassword, hashPassword } = require('../middleware/authMiddleware');
 const RefreshToken = require('../model/RefreshToken');
 
 router.post('/login', async(req, res, next) => {
@@ -28,10 +28,10 @@ router.post('/login', async(req, res, next) => {
 
         req.user = user;
 
-        res.status(200).json({success: true, message: "Login success.", token: token, refreshToken: refreshToken});
+        res.status(200).json({success: true, message: "Login success.", token: token});
 })
 
-router.post('/logout', async(req, res, next) => {
+router.post('/logout', authToken, async(req, res, next) => {
     try {
         const refreshToken = req.cookies.refreshToken;
         if(!refreshToken) return next(new AppError("Can not find refresh token.", 401));
@@ -79,7 +79,7 @@ router.post('/signup', async(req, res, next) => {
     res.status(200).json({success: true, message: "Sign up success.", token: token});
 })
 
-router.post('/changePass/:id', async(req, res, next) => {
+router.post('/changePass/:id', authToken, async(req, res, next) => {
     const { current_password, new_password } = req.body;
     const userId = req.params.id;
     const checkPass = await User.findById(userId);

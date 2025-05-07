@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const AppError = require('../utils/AppError.js');
 const Message = require('../model/Message.js');
-const { authToken } = require('../middleware/authMiddleware.js');
+const { authToken, checkRoles } = require('../middleware/authMiddleware.js');
 
-router.get("/log/:id", authToken, async(req, res, next) => {
+router.get("/log/:id", authToken, checkRoles('admin', 'user'), async(req, res, next) => {
     try {
         const partnerId = req.params.id;
         if(!partnerId) return next( new AppError("partnerId is required.", 400));
@@ -29,7 +29,7 @@ router.get("/log/:id", authToken, async(req, res, next) => {
     }
 })
 
-router.get("/:id", authToken, async(req, res, next) => {
+router.get("/:id", authToken, checkRoles('admin', 'user'), async(req, res, next) => {
     try {
         const message = await Message.findById(req.params.id).populate('from').populate('to');
         if(!message) return next( new AppError("No message was found.", 404));
@@ -43,7 +43,7 @@ router.get("/:id", authToken, async(req, res, next) => {
     }
 })
 
-router.post("/", authToken, async(req, res, next) => {
+router.post("/", authToken, checkRoles('admin', 'user'), async(req, res, next) => {
     try {
         //Sửa lại tạo mess cụ thể để làm xác định lỗi
         const newMess = new Message(req.body);
@@ -59,7 +59,7 @@ router.post("/", authToken, async(req, res, next) => {
     }
 })
 
-router.delete("/:id", authToken, async(req, res, next) => {
+router.delete("/:id", authToken, checkRoles('admin', 'user'), async(req, res, next) => {
     try {
         const deleteRes = await Message.findByIdAndDelete(req.params.id);
         if(!deleteRes) return next( new AppError("Message not found.", 404));

@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const User = require('../model/User');
 const AppError = require('../utils/AppError');
-const { authToken } = require('../middleware/authMiddleware');
+const { authToken, checkRoles } = require('../middleware/authMiddleware');
 
-router.get("/", authToken, async(req, res, next) => {
+router.get("/", authToken, checkRoles('admin'), async(req, res, next) => {
     try {
         const userList = await User.find();
         if(!userList) return next(new AppError("No user was found.", 404));
@@ -18,7 +18,7 @@ router.get("/", authToken, async(req, res, next) => {
     }
 })
 
-router.get("/email", authToken, async(req, res, next) => {
+router.get("/email", authToken, checkRoles('admin', 'user'), async(req, res, next) => {
     try {
         const {user_email} = req.query;
 
@@ -37,7 +37,7 @@ router.get("/email", authToken, async(req, res, next) => {
     }
 })
 
-router.get("/:id", authToken, async(req, res, next) => {
+router.get("/:id", authToken, checkRoles('admin', 'user'), async(req, res, next) => {
     try {
         const user = await User.findById(req.params.id);
         if(!user) return next(new AppError("User not found.", 404));
@@ -51,7 +51,7 @@ router.get("/:id", authToken, async(req, res, next) => {
     }
 })
 
-router.post("/", authToken, async(req, res, next) => {
+router.post("/", authToken, checkRoles('admin'), async(req, res, next) => {
     try {
         const { user_email, user_name, avatar_url, user_password } = req.body;
         if(!user_email || !user_name || !avatar_url || !user_password) return next(new AppError("Required data.", 400))
@@ -73,7 +73,7 @@ router.post("/", authToken, async(req, res, next) => {
     }
 })
 
-router.put("/:id", authToken, async(req, res, next) => {
+router.put("/:id", authToken, checkRoles('admin', 'user'), async(req, res, next) => {
     try {
         const { user_name, avatar_url, user_password } = req.body;
         const updateFields = {};
@@ -97,7 +97,7 @@ router.put("/:id", authToken, async(req, res, next) => {
     }
 })
 
-router.delete("/:id", authToken, async(req, res, next) => {
+router.delete("/:id", authToken, checkRoles('admin'), async(req, res, next) => {
     try {
         const deleteRes = await User.findByIdAndDelete(req.params.id);
         if(!deleteRes) return next(new AppError("User not found.", 404));

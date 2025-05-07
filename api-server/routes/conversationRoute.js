@@ -6,11 +6,11 @@ const AppError = require('../utils/AppError');
 const Conversation = require('../model/Conversation');
 const Group = require('../model/Group');
 
-const { authToken } = require('../middleware/authMiddleware');
+const { authToken, checkRoles } = require('../middleware/authMiddleware');
 const { generateConversationId } = require('../middleware/generateId');
 
 
-router.get("/", authToken, async (req, res, next) => {
+router.get("/", authToken, checkRoles('admin'), async (req, res, next) => {
     try {
         const response = await Conversation.find();
         if(response.length === 0) return next(new AppError("No conversation was found.", 404));
@@ -24,7 +24,7 @@ router.get("/", authToken, async (req, res, next) => {
     }
 })
 
-router.get("/:id", authToken, async(req, res, next) => {
+router.get("/:id", authToken, checkRoles('admin', 'user'), async(req, res, next) => {
     try {
         const groupConversation = await Group.find({members_id: req.user.id}, {_id: 1});
         const groupIds = groupConversation.map(g => g._id);
@@ -50,7 +50,7 @@ router.get("/:id", authToken, async(req, res, next) => {
     }
 })
 
-router.post("/", authToken, async (req, res, next) => {
+router.post("/", authToken, checkRoles('admin', 'user'), async (req, res, next) => {
     try {
        const newConversation = req.body;
        if(!newConversation) return next(new AppError("Required data.", 400));
@@ -66,7 +66,7 @@ router.post("/", authToken, async (req, res, next) => {
     }
 })
 
-router.put("/", authToken, async (req, res, next) => {
+router.put("/", authToken, checkRoles('admin', 'user'), async (req, res, next) => {
     try {
         const filter = {};
         if (req.body.conversationId) filter.conversationId = req.body.conversationId;
@@ -90,7 +90,7 @@ router.put("/", authToken, async (req, res, next) => {
     }
 })
 
-router.delete("/:id", authToken, async(req, res, next) => {
+router.delete("/:id", authToken, checkRoles('admin', 'user'), async(req, res, next) => {
     try {
         const response = await Conversation.findByIdAndDelete(req.params.id);
         if(!response) return next(new AppError("Conversation not found.", 404));

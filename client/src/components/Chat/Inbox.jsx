@@ -9,7 +9,7 @@ const Inbox = ({user, mess, onClick, presence}) => {
                 <div className="relative">
                     <img
                         alt="User avatar"
-                        className="w-10 h-10 rounded-full object-cover shrink-0 hover:scale-105 duration-200 hover:ring-2 cursor-pointer"
+                        className="w-12 h-10 rounded-full object-cover shrink-0 hover:scale-105 duration-200 hover:ring-2 cursor-pointer"
                         src={`http://localhost:3000${mess.groupId?mess.groupId.avatar_url:sender.avatar_url}`}
                     />
                     <span className={`absolute right-0 bottom-0 w-3 h-3 ${mess.type === 'direct' ? presence === 'online' ? 'bg-green-400' : 'bg-gray-400' : 'hidden'} rounded-full`}></span>

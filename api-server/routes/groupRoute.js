@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const {authToken} = require('../middleware/authMiddleware');
+const { authToken, checkRoles } = require('../middleware/authMiddleware');
 const AppError = require('../utils/AppError');
 const Group = require('../model/Group');
 
-router.get("/", authToken, async(req, res, next) => {
+router.get("/", authToken, checkRoles('admin'), async(req, res, next) => {
     try {
         const groupList = await Group.find();
         if(!groupList) return next(new AppError("No group was found.", 404));
@@ -18,7 +18,7 @@ router.get("/", authToken, async(req, res, next) => {
     }
 })
 
-router.get("/user/:id", authToken, async(req, res, next) => {
+router.get("/user/:id", authToken, checkRoles('admin', 'user'), async(req, res, next) => {
     try {
         const groups = await Group.find({members_id: req.params.id});
         if(!groups) return next(new AppError("No group was found.", 404));
@@ -32,7 +32,7 @@ router.get("/user/:id", authToken, async(req, res, next) => {
     }
 })
 
-router.get("/:id", authToken, async(req, res, next) => {
+router.get("/:id", authToken, checkRoles('admin', 'user'), async(req, res, next) => {
     try {
         const group = await Group.findById(req.params.id).populate('members_id');
         if(!group) return next(new AppError("No group was found.", 404));
@@ -46,7 +46,7 @@ router.get("/:id", authToken, async(req, res, next) => {
     }
 })
 
-router.post("/", authToken, async(req, res, next) => {
+router.post("/", authToken, checkRoles('admin', 'user'), async(req, res, next) => {
     try {
         const newGroup = new Group(req.body);
         if(!newGroup) return next(new AppError("Required data.", 400));
@@ -61,7 +61,7 @@ router.post("/", authToken, async(req, res, next) => {
     }
 })
 
-router.post("/members/:id", authToken, async (req, res, next) => {
+router.post("/members/:id", authToken, checkRoles('admin', 'user'), async (req, res, next) => {
     try {
         const currentGroup = await Group.findById(req.params.id);
         if (!currentGroup) return next(new AppError("No group was found.", 404));
@@ -87,7 +87,7 @@ router.post("/members/:id", authToken, async (req, res, next) => {
     }
 });
 
-router.put("/:id", authToken, async (req, res, next) => {
+router.put("/:id", authToken, checkRoles('admin', 'user'), async (req, res, next) => {
     try {
         const updateGroup = {};
         const allowUpdate = ["group_name", "host_id", "lastMessageSeq"];
@@ -112,7 +112,7 @@ router.put("/:id", authToken, async (req, res, next) => {
     }
 });
 
-router.delete("/members/:id", authToken, async (req, res, next) => {
+router.delete("/members/:id", authToken, checkRoles('admin', 'user'), async (req, res, next) => {
     try {
         const currentGroup = await Group.findById(req.params.id);
         if (!currentGroup) return next(new AppError("Group not found.", 404));
@@ -140,7 +140,7 @@ router.delete("/members/:id", authToken, async (req, res, next) => {
     }
 });
 
-router.delete("/:id", authToken, async(req, res, next) => {
+router.delete("/:id", authToken, checkRoles('admin', 'user'), async(req, res, next) => {
     try {
         const deleteRes = await Group.findByIdAndDelete(req.params.id);
         if(!deleteRes) return next( new AppError("Group not found.", 404));

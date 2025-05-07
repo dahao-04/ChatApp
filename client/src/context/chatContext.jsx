@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../api/axios';
 import io from 'socket.io-client';
 import { jwtDecode } from 'jwt-decode';
 
@@ -15,44 +15,49 @@ export const ChatProvider = ({children}) => {
     const [groupList, setGroupList] = useState([]);
     const [notifi, setNotifi] = useState({show: false, status: false, message: ""});
     const [onlineUsers, setOnlineUsers] = useState({});
+    const [userLoaded, setUserLoaded] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [loadingCount, setLoadingCount] = useState(0);
 
+    const token = localStorage.getItem('auth-token');
+
     useEffect( () => {
-        const token = localStorage.getItem('auth-token');
-        if(token) {
-            axios.get(`http://localhost:3000/user/${jwtDecode(token).id}`)
-            .then(res => {
-                setLoadingCount(prev => prev + 1);
-                setUser({id: res.data.data._id, name: res.data.data.user_name, url: res.data.data.avatar_url})
-            })
-            .catch(err => console.log("Error: ", err));
+        if(!token) {
+            setIsLoading(true);
+            return;
         }
-        axios.get(`http://localhost:3000/mess/log/${user.id}`,{
-            headers: {"auth-token": token}
+        axios.get(`/user/${jwtDecode(token).id}`)
+        .then(res => {
+            setLoadingCount(prev => prev + 1);
+            setUser({id: res.data.data._id, name: res.data.data.user_name, url: res.data.data.avatar_url})
+            setUserLoaded(true);
         })
+        .catch(err => console.log("Error: ", err));
+    },[token])
+    
+    useEffect( () => {
+        if(!userLoaded) return;
+        axios.get(`/mess/log/${user.id}`)
         .then(res => {
             setLoadingCount(prev => prev + 1);
             setSendList(res.data.data.sendList);
             setReceiveList(res.data.data.receiveList)})
         .catch(err => console.log("Error: ", err));
 
-        axios.get(`http://localhost:3000/conversation/${user.id}`, {
-            headers: {'auth-token': token}
-        })
+        axios.get(`/conversation/${user.id}`)
         .then(res => {
             setLoadingCount(prev => prev + 1);
             setConversationList(res.data.data);
         })
         .catch(err => console.log("Error: ", err));
 
-        axios.get(`http://localhost:3000/group/user/${user.id}`)
+        axios.get(`/group/user/${user.id}`)
         .then(res => {
             setLoadingCount(prev => prev + 1);
             setGroupList(res.data.data);
         })
         .catch(err => console.log("Error: ", err))
-    },[user.id])
+    },[user.id, userLoaded])
 
     useEffect(() => {
         if(loadingCount === 4) {
@@ -107,4 +112,4 @@ export const ChatProvider = ({children}) => {
     )
 }
 
-export default ChatContext;
+export {ChatContext};

@@ -5,7 +5,8 @@ const UserSchema = new mongoose.Schema({
     user_name: {type: String, default: "New User"},
     avatar_url: {type: String, default: "/uploads/avatars/default.png"},
     user_password: String,
-    createAt: {type: Date, default: Date.now}
+    createAt: {type: Date, default: Date.now},
+    role: { type: String, enum:['admin', 'user'], default: 'user'}
 })
 
 module.exports = mongoose.model("user", UserSchema);

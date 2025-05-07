@@ -1,7 +1,7 @@
 import {Link} from 'react-router-dom';
 import {useState, useContext} from 'react';
 
-import ChatContext from '../context/chatContext';
+import {ChatContext} from '../context/chatContext';
 import Notification from './Notification';
 
 const Login = ({type, fields, func}) => {

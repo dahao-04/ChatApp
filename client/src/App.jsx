@@ -1,5 +1,6 @@
 import React from 'react'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import PrivateRoute from './components/PrivateRoute'
 import HomePage from './pages/HomePage'
 import ChatPage from './pages/ChatPage'
 import LoginPage from './pages/LoginPage'
@@ -14,7 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage/>}/>
           <Route path="/login" element={<LoginPage/>}/>
-          <Route path="/chat" element={<ChatPage/>}/>
+          <Route path="/chat" element={<PrivateRoute><ChatPage/></PrivateRoute>}/>
           <Route path="/signup" element={<SignupPage/>}/>
         </Routes>
       </ChatProvider>

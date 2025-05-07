@@ -1,11 +1,11 @@
 import { useContext, useState, useCallback ,useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../../api/axios";
 
 import Inbox from "./Inbox";
 import FormModal from "../FormModal";
 import SidebarFooter from "./SidebarFooter";
-import ChatContext from "../../context/chatContext";
+import {ChatContext} from "../../context/chatContext";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -36,8 +36,7 @@ const Sidebar = () => {
     async (formData) => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/user/email?user_email=${formData.email}`,
-          { headers: token }
+          `/user/email?user_email=${formData.email}`
         );
         const other = response.data.data;
         if (other._id !== user.id) {
@@ -65,8 +64,7 @@ const Sidebar = () => {
     async (formData) => {
       try {
         const findUser = await axios.get(
-          `http://localhost:3000/user/email?user_email=${formData.email}`,
-          { headers: token }
+          `/user/email?user_email=${formData.email}`
         );
         const other = findUser.data.data;
         if (other._id === user.id) return;
@@ -78,9 +76,8 @@ const Sidebar = () => {
         };
 
         const groupCreateRes = await axios.post(
-          "http://localhost:3000/group/",
-          groupPayload,
-          { headers: token }
+          "/group/",
+          groupPayload
         );
 
         const newGroup = groupCreateRes.data.data;
@@ -107,9 +104,8 @@ const Sidebar = () => {
         };
 
         await axios.post(
-          "http://localhost:3000/conversation",
-          conversation,
-          { headers: token }
+          "/conversation",
+          conversation
         );
 
         setConversationList(prev => [...prev, conversation]);
@@ -130,10 +126,11 @@ const Sidebar = () => {
   );
 
   // 3. Sign out
-  const handleSignOut = useCallback(() => {
+  const handleSignOut = async () => {
     localStorage.removeItem("auth-token");
-    navigate("/");
-  }, [navigate]);
+    const response = await axios.post('/auth/logout');
+    if(response) navigate("/");
+  };
 
   const filteredList = useMemo(() => {
     if (!searchText) return conversationList;

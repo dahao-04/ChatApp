@@ -1,16 +1,14 @@
 import { useContext, useRef, useState } from 'react';
-import axios from 'axios';
-import chatContext from '../../context/chatContext';
+import axios from '../../api/axios';
+import {ChatContext} from '../../context/chatContext';
 import FormModal from '../FormModal';
 
 const SidebarFooter = () => {
-    const { user, setUser, setNotifi } = useContext(chatContext);
+    const { user, setUser, setNotifi } = useContext(ChatContext);
     const [toggleBtn, setToggleBtn] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [modalConfig, setModalConfig] = useState({ title: '', fieldList: [], func: () => {} });
     const fileInputRef = useRef(null);
-
-    const token = localStorage.getItem('auth-token');
     
     const handleAvatarChange = async (e) => {
         const file = e.target.files[0];
@@ -20,18 +18,13 @@ const SidebarFooter = () => {
         formData.append('avatar', file);
 
         try {
-            const res = await axios.post('http://localhost:3000/upload/avatar', formData);
+            const res = await axios.post('/upload/avatar', formData);
             const avatarUrl = res.data.avatarUrl;
             const updateUser = await axios.put(
-                `http://localhost:3000/user/${user.id}`, 
+                `/user/${user.id}`, 
                 {
                     avatar_url: avatarUrl
-                },
-                {
-                    headers: {
-                        'auth-token': token
-                    }
-                } 
+                }
             );
             if(updateUser) {
                 setNotifi({show: true, status: true, message: "Cool avatar updated."})
@@ -54,14 +47,9 @@ const SidebarFooter = () => {
                         setNotifi({ show: true, status: false, message: "Enter your new name."})
                     } else {
                         const updateUser = await axios.put(
-                            `http://localhost:3000/user/${user.id}`, 
+                            `/user/${user.id}`, 
                             {
                                 user_name: formData.name
-                            },
-                            {
-                                headers: {
-                                    'auth-token': token
-                                }
                             }
                         );
                         if(updateUser) {
@@ -88,7 +76,7 @@ const SidebarFooter = () => {
                     if(formData.current === formData.new) {
                         setNotifi({show: true, status: false, message: "It's look similar..."})
                     } else {
-                        await axios.post(`http://localhost:3000/auth/changePass/${user.id}`,
+                        await axios.post(`/auth/changePass/${user.id}`,
                             {
                                 current_password: formData.current,
                                 new_password: formData.new

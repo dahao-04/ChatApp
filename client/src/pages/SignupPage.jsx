@@ -1,7 +1,7 @@
-import axios from 'axios';
+import axios from '../api/axios';
 
 import { useContext } from 'react';
-import ChatContext from '../context/chatContext';
+import {ChatContext} from '../context/chatContext';
 import Login from '../components/Login';
 
 const SignupPage = () => {
@@ -13,7 +13,7 @@ const SignupPage = () => {
             if(formData.repassword !== formData.password) {
                 setNotifi({show: true, status: false, message: "Not match with password."})
             } else {
-                const response = await axios.post('http://localhost:3000/auth/signup', {
+                const response = await axios.post('/auth/signup', {
                     user_email: formData.email,
                     user_name: formData.name,
                     user_password: formData.password

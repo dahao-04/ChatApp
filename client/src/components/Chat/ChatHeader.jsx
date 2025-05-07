@@ -1,9 +1,9 @@
 import { useContext, useState } from 'react'
-import chatContext from '../../context/chatContext' 
+import {ChatContext} from '../../context/chatContext' 
 import Canvas from '../Canvas'
 
 const ChatHeader = ({socket}) => {
-    const { currentSender } = useContext(chatContext);
+    const { currentSender } = useContext(ChatContext);
     const [showCanvas, setShowCanvas] = useState(false);
 
     return (

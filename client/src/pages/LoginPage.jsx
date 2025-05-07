@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios from '../api/axios';
 import { useContext } from 'react';
-import ChatContext from '../context/chatContext';
+import {ChatContext} from '../context/chatContext';
 import Login from '../components/Login';
 
 const LoginPage = () => {
@@ -9,7 +9,7 @@ const LoginPage = () => {
     const fields = ["email", "password"];
     const func = async (formData) => {
         try {
-            const response = await axios.post('http://localhost:3000/auth/login', {
+            const response = await axios.post('/auth/login', {
                 user_email: formData.email,
                 user_password: formData.password
             });

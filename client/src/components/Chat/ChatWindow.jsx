@@ -1,11 +1,11 @@
 import { useContext, useMemo, useCallback } from 'react';
-import axios from 'axios';
+import axios from '../../api/axios';
 
 import ChatHeader from "./ChatHeader";
 import ChatFooter from "./ChatFooter";
 import ReceiveMess from "./ReceiveMess";
 import SendMess from "./SendMess";
-import ChatContext from '../../context/chatContext';
+import {ChatContext} from '../../context/chatContext';
 
 const ChatWindow = () => {
     const {
@@ -59,7 +59,7 @@ const ChatWindow = () => {
 
     try {
         // 2.2. Lưu message vào DB
-        await axios.post('http://localhost:3000/mess', message);
+        await axios.post('/mess', message);
 
         // 2.3. Tạo key conversationId cho direct
         const convKey = currentSender.type === 'direct'
@@ -75,7 +75,7 @@ const ChatWindow = () => {
 
         if (idx >= 0) {
         // 2.5. Cập nhật conversation hiện có
-        await axios.put('http://localhost:3000/conversation', {
+        await axios.put('/conversation', {
             conversationId: convKey,
             groupId: currentSender.type === 'direct' ? null : currentSender.id,
             lastMessage
@@ -88,14 +88,17 @@ const ChatWindow = () => {
         });
         } else {
         // 2.6. Tạo mới conversation
-        await axios.post('http://localhost:3000/conversation', {
-            type: currentSender.type,
-            participant: currentSender.type === 'direct'
-            ? [ user.id, currentSender.id ]
-            : null,
-            groupId: currentSender.type === 'direct' ? null : currentSender.id,
-            lastMessage
-        });
+        await axios.post(
+            '/conversation',
+            {
+                type: currentSender.type,
+                participant: currentSender.type === 'direct'
+                ? [ user.id, currentSender.id ]
+                : null,
+                groupId: currentSender.type === 'direct' ? null : currentSender.id,
+                lastMessage
+            }
+        );
         // Cập nhật state
         setConversationList(prev => [
             ...prev,

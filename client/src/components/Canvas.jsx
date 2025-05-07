@@ -1,7 +1,7 @@
 import { useState, useContext, useCallback, useEffect } from "react";
-import axios from "axios";
+import axios from "../api/axios";
 
-import ChatContext from "../context/chatContext";
+import {ChatContext} from "../context/chatContext";
 import FormModal from './FormModal';
 
 const Canvas = ({ title, show, onClose, socket }) => {
@@ -17,7 +17,7 @@ const Canvas = ({ title, show, onClose, socket }) => {
         if (!show) return;
         (async () => {
           try {
-            const res = await axios.get(`http://localhost:3000/group/${currentSender.id}`);
+            const res = await axios.get(`/group/${currentSender.id}`);
             setMembers(res.data.data.members_id);
           } catch (err) {
             console.error("Lỗi khi fetch members:", err);
@@ -32,12 +32,13 @@ const Canvas = ({ title, show, onClose, socket }) => {
     const addToGroup = useCallback(
         async(formData) => {
             try {
-                const findUser = await axios.get(`http://localhost:3000/user/email?user_email=${formData.email}`)
+                const findUser = await axios.get(`/user/email?user_email=${formData.email}`
+                )
                 if(findUser) {
                     const other = findUser.data.data;
                     if (other._id === user.id) return;
                     setMembers(prev => [...prev, other])
-                    await axios.post(`http://localhost:3000/group/members/${currentSender.id}`, 
+                    await axios.post(`/group/members/${currentSender.id}`, 
                         {members_id: other._id}
                     )
                     //chú ý đoạn này xem có chạy được ko
@@ -57,7 +58,7 @@ const Canvas = ({ title, show, onClose, socket }) => {
             try {
                 if(userId === user.id) return;
                 setMembers(prev => prev.filter(member => member._id!==userId))
-                await axios.delete(`http://localhost:3000/group/members/${currentSender.id}`, 
+                await axios.delete(`/group/members/${currentSender.id}`, 
                     {data: {members_id: userId}}
                 )
                 socket.emit('delete-from-group', {userList: [userId], groupId: currentSender.id})

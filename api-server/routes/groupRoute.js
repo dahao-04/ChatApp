@@ -89,16 +89,18 @@ router.post("/members/:id", authToken, checkRoles('admin', 'user'), async (req, 
 
 router.put("/:id", authToken, checkRoles('admin', 'user'), async (req, res, next) => {
     try {
+        const { group_name, host_id, avatar_url } = req.body;
         const updateGroup = {};
-        const allowUpdate = ["group_name", "host_id", "lastMessageSeq"];
 
-        for (let key of allowUpdate) {
-            if (req.body[key] !== undefined) {
-                updateGroup[key] = req.body[key];
-            }
-        }
+        if (group_name) updateGroup.group_name = group_name;
+        if (host_id) updateGroup.host_id = host_id;
+        if (avatar_url) updateGroup.avatar_url = avatar_url;
 
-        const updateRes = await Group.findByIdAndUpdate(req.params.id, updateGroup, { new: true });
+        const updateRes = await Group.findByIdAndUpdate(
+            req.params.id, 
+            {$set: updateGroup}, 
+            { new: true }
+        );
 
         if (!updateRes) return next(new AppError("No group was found.", 404));
 

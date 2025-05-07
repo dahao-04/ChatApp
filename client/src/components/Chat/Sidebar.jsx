@@ -148,112 +148,112 @@ const Sidebar = () => {
   }, [searchText, conversationList, user.id]);
 
   return (
-  <aside className="w-1/4 me-3 h-screen">
-      <div className="title h-[7vh] p-4 border-b border-gray-200 rounded-t-lg flex items-center">
-        <h1 className="text-xl font-bold">
-          Chat App
-        </h1>
-      </div>
-      <div className="p-4 h-[10vh] flex shadow">
-        <input 
-            className="w-full h-full p-2 border border-gray-200 rounded me-2" 
-            value={searchText}
-            onChange={e => setSearchText(e.target.value)}
-            placeholder="Search..."
-        />
-      <div className="relative">
-        <button 
-        onClick={() => setToggleBtn(state => !state)}
-        className='transition h-full'
-        >
-          <i className={`fas fa-caret-right transition-transform duration-300 ${toggleBtn ? "rotate-90" : ""}`}></i>
-        </button>
-        <ul className={`absolute right-0 mt-2 w-48 rounded-xl p-4 shadow-lg z-10 space-y-2 transition-all 
-          duration-300 transform origin-top-right 
-          ${toggleBtn ? "scale-100 opacity-100 visible" : "scale-95 opacity-0 invisible"}`}>
-            <li className="transition-transform duration-200 hover:scale-105">
-              <button 
-              className="w-full text-left flex items-center gap-2" 
-              onClick={() => {setCreateChatModal(true); setToggleBtn(false)}}
-              >
-                <i className="fas fa-user-friends transition-transform duration-200 hover:scale-110"></i>
-                <span className="font-medium">Add chat</span>
-              </button>
-            </li>
-            <li className="transition-transform duration-200 hover:scale-105">
-              <button 
-              className="w-full text-left flex items-center gap-2" 
-              onClick={() => {setCreateGroupChatModal(true); setToggleBtn(false)}}
-              >
-                <i className="fas fa-users"></i>
-                <span className="font-medium">Add group</span>
-              </button>
-            </li>
-            <li className="transition-transform duration-200 hover:scale-105">
-              <button 
-              className="w-full text-left flex items-center gap-2" 
-              onClick={handleSignOut}
-              >
-                <i className="fas fa-sign-out-alt"></i>
-                <span className="font-medium">Log out</span>
-              </button>
-            </li>
-          </ul>
-      </div>
-
-      </div>
-      {isLoading ? (
-        <div className="h-[81vh] flex items-center justify-center">
-          <img src="/loading.gif" alt="Loading..." />
+    <aside className="w-1/4 me-3 h-screen">
+        <div className="title h-[7vh] p-4 border-b border-gray-200 rounded-t-lg flex items-center">
+          <h1 className="text-xl font-bold">
+            Chat App
+          </h1>
         </div>
-      ) : (
-        <>
-          <div className="p-4 h-[72vh] mb-2 rounded-b-lg shadow">
-          {filteredList.map((item, idx) =>
-            (<Inbox
-                  key={idx}
-                  user={user}
-                  mess={item}
-                  presence={item.type === 'direct' ? onlineUsers.includes(item.participant.find(p => p._id !== user.id)._id) ? 'online' : 'offline' : ''}
-                  onClick={() => {
-                  if (item.type === "direct") {
-                      const other = item.participant.find(p => p._id !== user.id);
-                      setCurrentSender({
-                        id: other._id,
-                        type: "direct",
-                        persence: onlineUsers.includes(other._id) ? 'online' : 'offline',
-                        name: other.user_name,
-                        url: other.avatar_url
-                      });
-                  } else {
-                      setCurrentSender({
-                        id: item.groupId._id,
-                        type: "group",
-                        name: item.groupId.group_name,
-                        url: item.groupId.avatar_url
-                      });
-                  }
-                  }}
-              />))}
-          </div>
-          <SidebarFooter/>
-        </>
-      )}
+        <div className="p-4 h-[10vh] flex shadow">
+          <input 
+              className="w-full h-full p-2 border border-gray-200 rounded me-2" 
+              value={searchText}
+              onChange={e => setSearchText(e.target.value)}
+              placeholder="Search..."
+          />
+        <div className="relative">
+          <button 
+          onClick={() => setToggleBtn(state => !state)}
+          className='transition h-full'
+          >
+            <i className={`fas fa-caret-right transition-transform duration-300 ${toggleBtn ? "rotate-90" : ""}`}></i>
+          </button>
+          <ul className={`absolute right-0 mt-2 w-48 rounded-xl p-4 shadow-lg z-10 space-y-2 transition-all 
+            duration-300 transform origin-top-right 
+            ${toggleBtn ? "scale-100 opacity-100 visible" : "scale-95 opacity-0 invisible"}`}>
+              <li className="transition-transform duration-200 hover:scale-105">
+                <button 
+                className="w-full text-left flex items-center gap-2" 
+                onClick={() => {setCreateChatModal(true); setToggleBtn(false)}}
+                >
+                  <i className="fas fa-user-friends transition-transform duration-200 hover:scale-110"></i>
+                  <span className="font-medium">Add chat</span>
+                </button>
+              </li>
+              <li className="transition-transform duration-200 hover:scale-105">
+                <button 
+                className="w-full text-left flex items-center gap-2" 
+                onClick={() => {setCreateGroupChatModal(true); setToggleBtn(false)}}
+                >
+                  <i className="fas fa-users"></i>
+                  <span className="font-medium">Add group</span>
+                </button>
+              </li>
+              <li className="transition-transform duration-200 hover:scale-105">
+                <button 
+                className="w-full text-left flex items-center gap-2" 
+                onClick={handleSignOut}
+                >
+                  <i className="fas fa-sign-out-alt"></i>
+                  <span className="font-medium">Log out</span>
+                </button>
+              </li>
+          </ul>
+        </div>
 
-      {createChatModal && (
-        <FormModal 
-        title={"Create new chat"}
-        closeModal={setCreateChatModal} 
-        fieldList={chatFieldList} 
-        func={handleCreateChat}/>
-      )}
-      {createGroupChatModal && (
-        <FormModal 
-        title={"Create new chat"}
-        closeModal={setCreateGroupChatModal} 
-        fieldList={groupChatFieldList} 
-        func={handleCreateGroupChat}/>
-      )}
+        </div>
+        {isLoading ? (
+          <div className="h-[81vh] flex items-center justify-center">
+            <img src="/loading.gif" alt="Loading..." />
+          </div>
+        ) : (
+          <>
+            <div className="p-4 h-[72vh] mb-2 rounded-b-lg shadow">
+            {filteredList.map((item, idx) =>
+              (<Inbox
+                    key={idx}
+                    user={user}
+                    mess={item}
+                    presence={item.type === 'direct' ? onlineUsers.includes(item.participant.find(p => p._id !== user.id)._id) ? 'online' : 'offline' : ''}
+                    onClick={() => {
+                    if (item.type === "direct") {
+                        const other = item.participant.find(p => p._id !== user.id);
+                        setCurrentSender({
+                          id: other._id,
+                          type: "direct",
+                          persence: onlineUsers.includes(other._id) ? 'online' : 'offline',
+                          name: other.user_name,
+                          url: other.avatar_url
+                        });
+                    } else {
+                        setCurrentSender({
+                          id: item.groupId._id,
+                          type: "group",
+                          name: item.groupId.group_name,
+                          url: item.groupId.avatar_url
+                        });
+                    }
+                    }}
+                />))}
+            </div>
+            <SidebarFooter/>
+          </>
+        )}
+
+        {createChatModal && (
+          <FormModal 
+          title={"Create new chat"}
+          closeModal={setCreateChatModal} 
+          fieldList={chatFieldList} 
+          func={handleCreateChat}/>
+        )}
+        {createGroupChatModal && (
+          <FormModal 
+          title={"Create new chat"}
+          closeModal={setCreateGroupChatModal} 
+          fieldList={groupChatFieldList} 
+          func={handleCreateGroupChat}/>
+        )}
     </aside>
   );
 };

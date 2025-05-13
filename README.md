@@ -148,7 +148,7 @@ chat-app/
 └─ client/           # React front-end 🎨
    ├─ public/        # Public files
    └─ src/ 
-      ├ assets/         # Static files (images, icons, etc.) 🖼️
+      ├─ api/           # Config api ⚙️
       ├─ components/    # Reusable UI components 🧩
       ├─ context/       # React context providers 🧠
       ├─ helpers/       # Utility functions 🛠️

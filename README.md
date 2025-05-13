@@ -100,6 +100,7 @@ Create a `.env` file in `api-server` directories based on the provided `.env.exa
 # .env example for api-server
 MONGODB_URI=mongodb://localhost:27017/chat-app
 SECRET_KEY=your_jwt_secret
+SECRET_REFRESH_KEY=your_jwt_secret
 
 ```
 

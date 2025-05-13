@@ -166,6 +166,7 @@ chat-app/
 | ------ | ----------------------- | ------------------------ |
 | POST   | `/auth/signup`          | Register a new user      |
 | POST   | `/auth/login`           | Authenticate and get JWT |
+| POST   | `/auth/refresh`         | Use to refresh token     |
 | POST   | `/auth/changePass/:id`  | Change user password     |
 
 ### Conversation
@@ -209,6 +210,13 @@ chat-app/
 | GET    | `/message/:id`     | Get message base on it's ID              |
 | POST   | `/message/`        | Create new message                       |
 | DELETE | `/message/:id`     | Delete message                           |
+
+### Upload
+
+| Method | Endpoint           | Description              |
+| ------ | ------------------ | ------------------------ |
+| POST   | `/upload/avatar`   | Upload user/group avatar |
+| POST   | `/upload/image`    | Upload message image     |
 
 ---
 

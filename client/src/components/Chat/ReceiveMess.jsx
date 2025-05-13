@@ -8,7 +8,10 @@ const ReceiveMess = ({ mess }) => {
             <div className="ml-3">
                 <div className="bg-white p-3 rounded-lg shadow ">
                     <div className="flex flex-col text-gray-700 text-start">
-                        {mess.content}
+                        {mess?.content}
+                        {mess.imageUrl && (
+                            <img className= "max-w-60" src={`http://localhost:3000${mess.imageUrl}`}/>
+                        )}
                         <span className="text-xs text-gray-500">
                             {time}
                         </span>

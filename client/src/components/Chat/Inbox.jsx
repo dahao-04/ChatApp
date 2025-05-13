@@ -22,7 +22,7 @@ const Inbox = ({user, mess, onClick, presence}) => {
                         }</div>
                     <div className="flex flex-row w-full overflow-hidden">
                         <div className="text-sm text-gray-500 truncate pe-3 w-3/6 overflow-hidden">
-                                { mess.lastMessage.from === user.id ? `You: ${mess.lastMessage.content}` : mess.lastMessage.content }
+                                { mess.lastMessage.from === user.id ? `You: ${mess.lastMessage.content}` : (mess.lastMessage.imageUrl ? "[Image]" : mess.lastMessage.content) }
                         </div>
                         <div className="text-sm text-gray-500 w-3/6 text-right truncate">
                             {time}

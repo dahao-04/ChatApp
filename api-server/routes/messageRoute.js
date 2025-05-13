@@ -3,31 +3,50 @@ const router = express.Router();
 const AppError = require('../utils/AppError.js');
 const Message = require('../model/Message.js');
 const { authToken, checkRoles } = require('../middleware/authMiddleware.js');
+const Group = require('../model/Group.js');
 
-router.get("/log/:id", authToken, checkRoles('admin', 'user'), async(req, res, next) => {
+router.get("/log/:id", authToken, checkRoles('admin', 'user'), async (req, res, next) => {
     try {
+        const userId = req.user.id;
         const partnerId = req.params.id;
-        if(!partnerId) return next( new AppError("partnerId is required.", 400));
-        const messageSendList = await Message.find({ 
-            from: req.user.id
+
+        if (!partnerId) return next(new AppError("partnerId is required.", 400));
+
+        // Tin nhắn gửi
+        const messageSendList = await Message.find({
+            from: userId
         }).populate('from').populate('to');
 
+        // Tin nhắn nhận (trực tiếp)
         const messageReceiveList = await Message.find({
-            to: req.user.id
-        }).populate('from').populate('to')
+            to: userId
+        }).populate('from').populate('to');
+
+        // Tin nhắn nhóm
+        const userGroups = await Group.find({ members_id: userId }).select('_id');
+        const groupIds = userGroups.map(g => g._id);
+
+        const groupReceiveList = await Message.find({
+            groupId: { $in: groupIds },
+            type: 'group'
+        }).populate('from').populate('groupId');
+
+        // Gộp chung tất cả vào receiveList
+        const allReceiveList = [...messageReceiveList, ...groupReceiveList];
 
         res.status(200).json({
             success: true,
             message: "Success",
             data: {
                 sendList: messageSendList,
-                receiveList: messageReceiveList
+                receiveList: allReceiveList
             }
-        })
+        });
     } catch (error) {
+        console.error(error);
         return next(new AppError("External Server Error.", 500));
     }
-})
+});
 
 router.get("/:id", authToken, checkRoles('admin', 'user'), async(req, res, next) => {
     try {

@@ -7,7 +7,10 @@ const SendMess = ({ mess, user }) => {
         <img alt="Current user avatar" className="w-10 h-10 rounded-full" height="40" src={`http://localhost:3000${user.url}`} width="40"/>
         <div className="mr-3">
             <div className="flex flex-col  text-start bg-[#59C1BD] text-white p-3 rounded-lg shadow">
-                    {mess.content}
+                    {mess?.content}
+                    {mess.imageUrl && (
+                        <img className= "max-w-60" src={`http://localhost:3000${mess.imageUrl}`}/>
+                    )}
                     <span className="text-xs text-gray-500">
                         {time}
                     </span>

@@ -80,8 +80,8 @@ io.on('connection', (socket) => {
     }
   })
 
-  socket.on('send_message', ({type, from, to, groupId, content, createAt}) => {
-    const message = {type, from, to, groupId, content, createAt };
+  socket.on('send_message', ({type, from, to, groupId, content, imageUrl, createAt}) => {
+    const message = {type, from, to, groupId, content, imageUrl, createAt };
 
     if(type === 'direct') {
       const receiverSocketId = onlineUsers.get(to._id);

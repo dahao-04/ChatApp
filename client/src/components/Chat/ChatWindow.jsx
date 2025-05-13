@@ -20,25 +20,26 @@ const ChatWindow = () => {
     } = useContext(ChatContext);
 
     // 1. Tạo chatLog từ sendList & receiveList
-    const chatLog = useMemo(() => {
-    return [...sendList, ...receiveList]
-        .filter(item => {
-        if (currentSender.type === 'direct') {
-            return (
-            item.type === 'direct' &&
-            (item.to._id === currentSender.id || item.from._id === currentSender.id)
-            );
-        } else {
-            return (
-            item.type !== 'direct' &&
-            item.groupId?._id === currentSender.id
-            );
-        }
-        })
-        .sort((a, b) => new Date(a.createAt) - new Date(b.createAt));
+    const chatLog = useMemo(() => { 
+        return [...sendList, ...receiveList]
+            .filter(item => {
+                if (currentSender.type === 'direct') {
+                    return (
+                        item.type === 'direct' &&
+                        (item.to._id === currentSender.id || item.from._id === currentSender.id)
+                    );
+                } else {
+                    return (
+                        item.type === 'group' &&
+                        (item.groupId._id === currentSender.id)
+                    );
+                }
+            })
+            .sort((a, b) => new Date(a.createAt) - new Date(b.createAt));
     }, [sendList, receiveList, currentSender]);
+
     // 2. Hàm gửi tin nhắn
-    const handleSend = useCallback(async (text) => {
+    const handleSend = useCallback(async (text, imageUrl) => {
     const timestamp = new Date().toISOString();
     // Chuẩn bị message
     const message = {
@@ -49,12 +50,13 @@ const ChatWindow = () => {
         ? null
         : { _id: currentSender.id, group_name: currentSender.name, avatar_url: currentSender.url },
         content: text,
+        imageUrl: imageUrl,
         createAt: timestamp
     };
     // Dữ liệu để update conversation
     const lastMessage = { 
         from: user.id, 
-        content: text, 
+        content: imageUrl ? "[Image]" : text,
         createAt: timestamp };
 
     try {

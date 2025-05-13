@@ -68,9 +68,10 @@ const ChatPage = () => {
             ]
         : [],
         lastMessage: {
-        from: message.from._id,
-        content: message.content,
-        createAt: message.createAt
+            from: message.from._id,
+            content: message.content,
+            imageUrl: message.imageUrl,
+            createAt: message.createAt
         }
     };
 

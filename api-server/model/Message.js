@@ -5,7 +5,8 @@ const MessageSchema = new mongoose.Schema({
     from: {type: mongoose.Schema.Types.ObjectId, ref: 'user'},
     to: {type: mongoose.Schema.Types.ObjectId, ref: 'user', default: null},
     groupId: {type: mongoose.Schema.Types.ObjectId, ref: 'group', default: null},
-    content: String,
+    content: {type: String, default: ""},
+    imageUrl: {type: String, default: null},
     createAt: {type: Date, default: Date.now}
 })
 

@@ -45,16 +45,22 @@ const Canvas = ({ title, show, onClose, socket }) => {
     const deleteUser = useCallback(
         async (userId) => {
             try {
-                if(userId === user.id) return;
+                const group = await axios.get(`/group/${currentSender.id}`);
+                if(userId === group.data.data.host_id) {
+                    setNotifi({ show: true, status: false, message: "You are host." });
+                    return;
+                }
                 setMembers(prev => prev.filter(member => member._id!==userId))
                 await axios.delete(`/group/members/${currentSender.id}`, 
                     {data: {members_id: userId}}
                 )
                 socket.emit('delete-from-group', {userList: [userId], groupId: currentSender.id})
             } catch (error) {
+                
                 console.log("Lỗi khi xóa user: ", error);
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         ,[currentSender.id, socket, user.id]
     )
 
@@ -123,6 +129,23 @@ const Canvas = ({ title, show, onClose, socket }) => {
         }
     };
 
+    const leaveGroup = useCallback(
+        async () => {
+            try {
+                await axios.delete(`/group/members/${currentSender.id}`, 
+                    {data: {members_id: user.id}}
+                )
+                socket.emit('leave-group', {groupList: [currentSender.id]});
+                window.location.href = ("/chat");
+            } catch (error) {
+                setNotifi({ show: true, status: false, message: error.response.data.message })
+                console.log("Lỗi khi xóa user: ", error);
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        ,[currentSender.id, socket, user.id]
+    )
+
     const groupSetttingList = [
         {
             name: "Change group avatar",
@@ -133,6 +156,11 @@ const Canvas = ({ title, show, onClose, socket }) => {
             name: "Change group name",
             icon: "fas fa-user-edit",
             func: openChangeGroupNameModal
+        },
+        {
+            name: "Leave group",
+            icon: "fas fa-door-open",
+            func: leaveGroup
         }
     ];
     const userSettingList = [];
@@ -163,7 +191,7 @@ const Canvas = ({ title, show, onClose, socket }) => {
                 {/* Canvas Panel */}
                 <aside
                     aria-label="Right side canvas panel"
-                    className={`fixed top-3 right-0 h-[750px] w-80 shadow-lg bg-white rounded-lg transform transition-transform duration-300 flex flex-col ${
+                    className={`fixed top-0 right-0 h-[95vh] mt-4 w-80 shadow-lg bg-white rounded-lg transform transition-transform duration-300 flex flex-col ${
                         show ? 'translate-x-0' : 'translate-x-full'
                     }`}
                 >

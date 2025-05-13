@@ -120,6 +120,7 @@ router.delete("/members/:id", authToken, checkRoles('admin', 'user'), async (req
         if (!currentGroup) return next(new AppError("Group not found.", 404));
 
         if (req.body.members_id === undefined) return next(new AppError("members_id is required.", 400));
+        if (req.body.members_id.includes(currentGroup.host_id)) return next(new AppError("You are host.", 400));
 
         const membersToRemove = Array.isArray(req.body.members_id)
             ? req.body.members_id

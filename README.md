@@ -140,6 +140,8 @@ chat-app/
 │  ├─ middleware/    # Auth & error handlers 🧱
 │  ├─ model/         # Mongoose models 📦
 │  ├─ routes/        # API routes 🔁
+│  ├─ uploads/       # Static images
+│  ├─ utils/         # Helper function 
 │  └─ index.js       # Main entry point 🏁
 │
 ├─ chat-server/      # WebSocket service 💬

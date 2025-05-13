@@ -68,10 +68,14 @@ export const ChatProvider = ({children}) => {
 
     // 1. initialize socket only once per user change
     useEffect(() => {
-        const sock = io('http://localhost:3001');
+        const sock = io('http://localhost:3001', {
+            auth: {
+                token: token
+            }
+        });
         setSocket(sock);
         return () => { sock.disconnect(); };
-    }, [user.id]);
+    }, [token, user.id]);
 
     // 2. register & join rooms
     useEffect(() => {

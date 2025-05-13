@@ -48,11 +48,11 @@ router.post("/", authToken, checkRoles('admin', 'user'), async(req, res, next) =
         //Sửa lại tạo mess cụ thể để làm xác định lỗi
         const newMess = new Message(req.body);
         if(!newMess) return next(new AppError("Required data.", 400));
-        await newMess.save();
+        const returnMess = await newMess.save();
         res.status(201).json({
             success: true,
             message: "Message created.",
-            data: newMess
+            data: returnMess
         })
     } catch (error) {
         return next(new AppError("External Server Error.", 500));

@@ -1,6 +1,9 @@
 const express = require('express');
+const axios = require('axios');
 const http = require('http');
 const { Server } = require('socket.io');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const app = express();
 const server = http.createServer(app);
@@ -11,7 +14,21 @@ const io = new Server(server, {
   }
 });
 
+const SECRET_KEY = process.env.SECRET_KEY;
+
 let onlineUsers = new Map();
+
+io.use((socket, next) => {
+  try {
+    const token = socket.handshake.auth.token;
+    if(!token) return (new Error("No token."));
+    const decode = jwt.verify(token, SECRET_KEY);
+    next();
+  } catch (error) {
+    return (new Error("Authentication Error."));
+  }
+})
+
 io.on('connection', (socket) => {
 
   console.log(`User connected: ${socket.id}`);
@@ -64,7 +81,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('send_message', ({type, from, to, groupId, content, createAt}) => {
-    const message = { type, from, to, groupId, content, createAt };
+    const message = {type, from, to, groupId, content, createAt };
 
     if(type === 'direct') {
       const receiverSocketId = onlineUsers.get(to._id);

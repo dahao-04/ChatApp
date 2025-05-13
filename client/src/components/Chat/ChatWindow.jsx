@@ -52,14 +52,18 @@ const ChatWindow = () => {
         createAt: timestamp
     };
     // Dữ liệu để update conversation
-    const lastMessage = { from: user.id, content: text, createAt: timestamp };
-
-    // 2.1. Gửi lên socket
-    socket?.emit('send_message', message);
+    const lastMessage = { 
+        from: user.id, 
+        content: text, 
+        createAt: timestamp };
 
     try {
         // 2.2. Lưu message vào DB
         await axios.post('/mess', message);
+
+        // 2.1. Gửi lên socket
+        socket?.emit('send_message', message);
+
 
         // 2.3. Tạo key conversationId cho direct
         const convKey = currentSender.type === 'direct'

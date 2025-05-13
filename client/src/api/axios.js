@@ -39,7 +39,7 @@ axios.interceptors.response.use(
 
         return axios(original);
       } catch (e) {
-        window.location.href = '/login';
+        window.location.href = '/';
         return Promise.reject(e);
       }
     }

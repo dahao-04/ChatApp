@@ -127,9 +127,11 @@ const Sidebar = () => {
 
   // 3. Sign out
   const handleSignOut = async () => {
-    localStorage.removeItem("auth-token");
     const response = await axios.post('/auth/logout');
-    if(response) navigate("/");
+    if(response) {
+      localStorage.removeItem("auth-token"); 
+      navigate("/");
+    }
   };
 
   const filteredList = useMemo(() => {

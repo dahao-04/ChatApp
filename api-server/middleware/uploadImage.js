@@ -1,6 +1,7 @@
 // middlewares/uploadAvatar.js
 const multer = require('multer');
 const path = require('path');
+const AppError = require('../utils/AppError');
 
 // Cấu hình nơi lưu và tên file
 const storage = multer.diskStorage({
@@ -50,7 +51,7 @@ const uploadImage = multer({
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Only jpg, png, webp allowed!'));
+      cb(new AppError("Only jpg, png, webp allowed!", 400));
     }
   }
 });

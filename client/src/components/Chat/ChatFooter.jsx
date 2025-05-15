@@ -3,12 +3,14 @@ import axios from '../../api/axios';
 import { ChatContext } from '../../context/chatContext';
 
 export default function ChatFooter({ sendMess }) {
-  const { socket, currentSender, user } = useContext(ChatContext);
+  const { socket, currentSender, user, setNotifi } = useContext(ChatContext);
   const [mess, setMess] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const fileInputRef = useRef(null);
   const typingTimeoutRef = useRef(null);
+  const [stickerSetList, setStickerSetList] = useState([]);
+  const [openSticker, setOpenSticker] = useState(false);
 
   // Emit typing events with debounce
   useEffect(() => {
@@ -54,36 +56,80 @@ export default function ChatFooter({ sendMess }) {
       setMess('');
       setIsTyping(false);
     } catch (err) {
-      console.error('Upload image failed', err);
+      setNotifi({show: true, status: false, message: err.response.data.message })
     }
   };
+
+  const handleLoadSticker = async () => {
+    try {
+      const res = await axios.get('/sticker');
+      console.log(res)
+      setStickerSetList(res.data.data);
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const handleSendSticker = async (url) => {
+    try {
+      sendMess("", url);
+    } catch (err) {
+      setNotifi({show: true, status: false, message: err.response.data.message })
+    }
+  }
 
   return (
     <footer className="p-4 border border-gray-200 rounded-b-lg">
       <div className="flex items-center">
         <input
-          className="w-full p-2 border border-gray-300 rounded"
+          className="w-full h-[5vh] p-2 border border-gray-300 rounded"
           placeholder="Type a message..."
           value={mess}
           type="text"
           onChange={handleInputChange}
           onKeyDown={e => e.key === 'Enter' && handleSend()}
         />
-
         <button
-          className="w-10 ml-2 p-2 text-white rounded group"
+          className="ml-2 p-2 text-white rounded group w-[5vh] h-[5vh] flex items-center justify-center"
           onClick={() => fileInputRef.current.click()}
         >
           <i className="far fa-image group-hover:scale-110 duration-200"></i>
         </button>
-
         <button
-          className="w-10 ml-2 p-2 text-white rounded group"
+          onClick={() => {
+            setOpenSticker(!openSticker);
+            if (!stickerSetList.length) handleLoadSticker();
+          }}
+          className='ml-2 p-2 text-white rounded group w-[5vh] h-[5vh] flex items-center justify-center'>
+          <i className="fas fa-icons group-hover:scale-110 duration-200"></i>
+        </button>
+        <button
+          className="ml-2 p-2 text-white rounded group w-[5vh] h-[5vh] flex items-center justify-center"
           onClick={handleSend}
         >
           <i className="fas fa-paper-plane group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:scale-105 duration-200"></i>
         </button>
       </div>
+      {openSticker && (
+        <div className="h-[15rem] max-w-screen pt-4 grid grid-rows-auto gap-2 overflow-y-auto">
+          {stickerSetList.map((stickerSet) => (
+            <div key={stickerSet.name}>
+              <p className="col-span-full text-gray-500 font-semibold text-sm mb-3">{stickerSet.name}</p>
+              <div className='grid grid-cols-6 gap-4 justify-items-center'>
+                {stickerSet.stickers.map((stickerUrl, index) => (
+                  <img
+                    key={index}
+                    src={`http://localhost:3000${stickerUrl}`}
+                    alt="sticker"
+                    className="w-12 h-12 cursor-pointer hover:scale-110 duration-200"
+                    onClick={()=> handleSendSticker(stickerUrl)}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       <input
         type="file"

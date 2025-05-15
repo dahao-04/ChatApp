@@ -182,7 +182,7 @@ const Canvas = ({ title, show, onClose, socket }) => {
             <>
                 {/* Overlay */}
                 <div
-                    className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ${
+                    className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 z-[60] ${
                         show ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
                     }`}
                     onClick={onClose}
@@ -191,7 +191,7 @@ const Canvas = ({ title, show, onClose, socket }) => {
                 {/* Canvas Panel */}
                 <aside
                     aria-label="Right side canvas panel"
-                    className={`fixed top-0 right-0 h-[95vh] mt-4 w-80 shadow-lg bg-white rounded-lg transform transition-transform duration-300 flex flex-col ${
+                    className={`fixed top-0 right-0 h-[95vh] mt-4 w-80 shadow-lg bg-white rounded-lg transform transition-transform duration-300 flex flex-col z-[60] ${
                         show ? 'translate-x-0' : 'translate-x-full'
                     }`}
                 >

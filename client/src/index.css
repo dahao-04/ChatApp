@@ -45,13 +45,6 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
-button:hover {
-  border-color: #469693;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto #646cff;
-}
 
 input:focus {
   outline: 4px auto #6e83a8;
@@ -75,11 +68,7 @@ input:focus {
     background-color: #3F72AF;
   }
   button:hover {
-    border-color: #315786;
     background-color: #315786;
-  }
-  button:focus {
-    outline: 4px auto #315786;
   }
 
   ul{

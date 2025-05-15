@@ -12,6 +12,7 @@ const messageRoute = require('./routes/messageRoute');
 const authRoute = require('./routes/authRoute');
 const conversationRoute = require('./routes/conversationRoute');
 const uploadRoute = require('./routes/uploadImgRoute');
+const stickerRoute = require('./routes/stickerRoute');
 
 
 app.use(cors({
@@ -31,6 +32,7 @@ app.use('/mess', messageRoute);
 app.use('/conversation', conversationRoute);
 app.use('/auth', authRoute);
 app.use('/upload', uploadRoute);
+app.use('/sticker', stickerRoute);
 
 app.use((req, res, next) => {
     next(new AppError(`Cannot find ${req.originalUrl} on this server`, 404));

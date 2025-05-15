@@ -161,20 +161,12 @@ const ChatWindow = () => {
     };
 
     return (
-        <div className="relative flex-1 flex flex-col shadow rounded-lg">
+        <div className="relative flex-1 flex flex-col flex-[1_auto_1] shadow rounded-lg">
             <ChatHeader socket={socket}/>
-        {showScrollBtn && (
-            <div
-                onClick={scrollToBottom}
-                className="absolute bottom-24 right-6 bg-gray-300 hover:bg-gray-400
-                        text-gray-500 px-3 py-1 rounded-full shadow-lg cursor-pointer font-medium"
-            >
-            <i class="fas fa-angle-down"></i>
-            </div>
-        )}
+
             <div 
                 ref= {containerRef} 
-                className="flex-1 overflow-y-auto p-4"
+                className="relative overflow-y-auto p-4 border-blue-500 -z-4"
                 onScroll={handleScroll}
             >
                 {chatLog.reduce((arr, msg, idx) => {
@@ -198,7 +190,17 @@ const ChatWindow = () => {
                     return arr;
                 }, [])}
                 <div ref={bottomRef}></div>
+                {showScrollBtn && (
+                <div
+                    onClick={scrollToBottom}
+                    className="absolute bottom-4 right-5 bg-gray-300 hover:bg-gray-400
+                            text-gray-500 px-3 py-1 rounded-full shadow-lg cursor-pointer font-medium"
+                >
+                <i className="fas fa-angle-down"></i>
+                </div>
+            )}
             </div>
+
 
             {isTyping && (
                 <span className='flex items-center w-9 h-4 rounded-t-lg bg-gray-200'>
@@ -206,6 +208,7 @@ const ChatWindow = () => {
                     <p className='text-gray-400 ms-2 text-xs font-medium'>typing</p>
                 </span>
             )}
+
             <ChatFooter sendMess={handleSend} />
         </div>
     );

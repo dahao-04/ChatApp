@@ -150,7 +150,7 @@ const Sidebar = () => {
   }, [searchText, conversationList, user.id]);
 
   return (
-    <aside className="w-1/4 me-3 h-screen">
+    <aside className="w-1/4 flex flex-col flex-[1_auto_1] me-3 h-screen">
         <div className="title h-[7vh] p-4 border-b border-gray-200 rounded-t-lg flex items-center">
           <h1 className="text-xl font-bold">
             Chat App
@@ -166,11 +166,11 @@ const Sidebar = () => {
         <div className="relative">
           <button 
           onClick={() => setToggleBtn(state => !state)}
-          className='transition h-full'
+          className='transition h-full flex items-center justify-center'
           >
             <i className={`fas fa-caret-right transition-transform duration-300 ${toggleBtn ? "rotate-90" : ""}`}></i>
           </button>
-          <ul className={`absolute right-0 mt-2 w-48 rounded-xl p-4 shadow-lg z-10 space-y-2 transition-all 
+          <ul className={`absolute right-0 mt-2 w-[25vh] rounded-xl p-4 shadow-lg z-10 space-y-2 transition-all 
             duration-300 transform origin-top-right 
             ${toggleBtn ? "scale-100 opacity-100 visible" : "scale-95 opacity-0 invisible"}`}>
               <li className="transition-transform duration-200 hover:scale-105">

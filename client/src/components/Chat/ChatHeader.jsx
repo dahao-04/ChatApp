@@ -12,12 +12,10 @@ const ChatHeader = ({socket}) => {
                 <div className='relative'>
                     <img
                         alt="Current chat user avatar"
-                        className="w-10 h-10 rounded-full"
-                        height="40"
+                        className="w-[6vh] h-[6vh] rounded-full"
                         src={`http://localhost:3000${currentSender.url}`}
-                        width="40"
                     />
-                    <span className={`absolute rounded-full w-3 h-3 right-0 bottom-0
+                    <span className={`absolute rounded-full w-[2vh] h-[2vh] right-0 bottom-0
                         ${currentSender.type === 'direct' ? currentSender.persence === 'online' ? 'bg-green-500' : 'bg-gray-400' : 'hidden'}`}></span>
                 </div>
                 <div className="ml-3 bg-[#3F72AF]">

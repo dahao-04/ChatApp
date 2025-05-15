@@ -102,11 +102,11 @@ const SidebarFooter = () => {
             <img 
                 alt="User avatar"
                 onClick={() => setToggleBtn(state => !state)}
-                className="w-10 h-10 rounded-full object-cover shrink-0 hover:scale-105 duration-200 hover:ring-2 cursor-pointer"
+                className="w-[13vh] h-[6vh] rounded-full object-cover shrink-0 hover:scale-105 duration-200 hover:ring-2 cursor-pointer"
                 src={`http://localhost:3000${user.url}`}
             />
 
-            <ul className={`absolute left-50 bottom-20 mt-2 rounded-xl p-4 shadow-lg z-10 space-y-2 transition-all 
+            <ul className={`absolute size-fit left-50 bottom-20 mt-2 rounded-xl p-4 shadow-lg z-10 space-y-2 transition-all 
                 duration-300 transform origin-top-right 
                 ${toggleBtn ? "scale-100 opacity-100 visible" : "scale-95 opacity-0 invisible"}`}>
                 <li className="transition-transform duration-200 hover:scale-105">

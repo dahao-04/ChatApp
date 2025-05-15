@@ -18,7 +18,7 @@ export const ChatProvider = ({children}) => {
     const [userLoaded, setUserLoaded] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [loadingCount, setLoadingCount] = useState(0);
-
+    const [isTyping, setIsTyping] = useState(false);
     const token = localStorage.getItem('auth-token');
 
     useEffect( () => {
@@ -109,7 +109,9 @@ export const ChatProvider = ({children}) => {
             setNotifi,
             onlineUsers,
             setOnlineUsers,
-            isLoading
+            isLoading,
+            isTyping,
+            setIsTyping
         }}>
             {children}
         </ChatContext.Provider>

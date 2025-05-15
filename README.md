@@ -227,13 +227,17 @@ chat-app/
 
 ### Client → Server
 
-| Event        | Payload                                          | Description              |
-| ------------ | ------------------------------------------------ | ------------------------ |
-| `register`   | `{ userId }`                                     | Register to server       |
-| `createGroup`| `{ userList, groupId }`                          | Add users online to room |
-| `join-group` | `{ groupList }`                                  | Join chat room           |
-| `leave-group`| `{ groupList }`                                  | Leave chat room          |
-| `sendMessage`| `{ type, from, to, groupId, content, createAt }` | Send a message           |
+| Event           | Payload                                          | Description              |
+| --------------- | ------------------------------------------------ | ------------------------ |
+| `register`      | `{ userId }`                                     | Register to server       |
+| `createGroup`   | `{ userList, groupId }`                          | Add users online to room |
+| `join-group`    | `{ groupList }`                                  | Join chat room           |
+| `leave-group`   | `{ groupList }`                                  | Leave chat room          |
+| `sendMessage`   | `{ type, from, to, groupId, content, createAt }` | Send a message           |
+| `typing`        | `{ userId, partnerId }`                          | Send typing signal       |
+| `is_typing`     | `{ userId }`                                     | Get signal typing        |
+| `stop_typing`   | `{ userId, partnerId }`                          | Send stop typing signal  |
+| `is_stop_typing`| `{ userId }`                                     | Get signal stop typing   |
 
 ### Server → Client
 

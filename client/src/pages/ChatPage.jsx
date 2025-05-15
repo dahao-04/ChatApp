@@ -15,7 +15,8 @@ const ChatPage = () => {
     notifi,
     setNotifi,
     setReceiveList,
-    setConversationList
+    setConversationList,
+    setIsTyping
   } = useContext(ChatContext);
 
   // handle incoming messages
@@ -87,14 +88,30 @@ const ChatPage = () => {
     });
   }, [currentSender, user.id, user.name, user.url, setReceiveList, setConversationList]);
 
+  const handleTyping = useCallback((typingUser) => {
+    if(typingUser === currentSender.id) {
+        setIsTyping(true);
+    }
+  }, [currentSender.id, setIsTyping])
+
+  const handleStopTyping = useCallback((typingUser) => {
+    if(typingUser === currentSender.id) {
+        setIsTyping(false);
+    }
+  }, [currentSender.id, setIsTyping])
+
   // attach/detach listener
   useEffect(() => {
       if (!socket) return;
       socket.on('receive_message', handleReceive);
+      socket.on('is_typing', handleTyping);
+      socket.on('is_stop_typing', handleStopTyping);
       return () => {
       socket.off('receive_message', handleReceive);
+      socket.off('is_typing', handleTyping);
+      socket.off('is_stop_typing', handleStopTyping);
       };
-  }, [socket, handleReceive]);
+  }, [socket, handleReceive, handleTyping, handleStopTyping]);
   return (
     <div className="flex h-screen">
         <Sidebar/>

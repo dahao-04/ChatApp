@@ -1,10 +1,11 @@
-import { useContext, useMemo, useCallback } from 'react';
+import React, { useContext, useMemo, useCallback, useRef, useEffect, useState } from 'react';
 import axios from '../../api/axios';
 
 import ChatHeader from "./ChatHeader";
 import ChatFooter from "./ChatFooter";
 import ReceiveMess from "./ReceiveMess";
 import SendMess from "./SendMess";
+import DateDivider from '../DateDevider';
 import {ChatContext} from '../../context/chatContext';
 
 const ChatWindow = () => {
@@ -16,9 +17,13 @@ const ChatWindow = () => {
     receiveList,
     currentSender,
     conversationList,
-    setConversationList
+    setConversationList,
+    isTyping
     } = useContext(ChatContext);
 
+    const [showScrollBtn, setShowScrollBtn] = useState(false);
+    const containerRef = useRef(null);
+    const bottomRef = useRef(null);
     // 1. Tạo chatLog từ sendList & receiveList
     const chatLog = useMemo(() => { 
         return [...sendList, ...receiveList]
@@ -132,18 +137,75 @@ const ChatWindow = () => {
     }
     }, [currentSender.type, currentSender.id, currentSender.name, currentSender.url, user.id, user.name, user.url, socket, conversationList, setSendList, setConversationList]);
 
-    return (
-        <div className="flex-1 flex flex-col shadow rounded-lg">
-            <ChatHeader socket={socket}/>
+    const formatDate = isoString => {
+        const d = new Date(isoString);
+        return d.toLocaleDateString('vi-VN');
+      };
+      
+    const scrollToBottom = () => {
+        if (bottomRef.current) {
+            bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
 
-            <div className="flex-1 overflow-y-auto p-4">
-                {chatLog.map((msg, idx) =>
+    useEffect(() => {
+        scrollToBottom();
+    }, [chatLog]);
+
+    const handleScroll = () => {
+        const el = containerRef.current;
+        if (!el) return;
+        // Thêm khoảng dư 20px để khỏi giật
+        const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 20;
+        setShowScrollBtn(!atBottom);
+    };
+
+    return (
+        <div className="relative flex-1 flex flex-col shadow rounded-lg">
+            <ChatHeader socket={socket}/>
+        {showScrollBtn && (
+            <div
+                onClick={scrollToBottom}
+                className="absolute bottom-24 right-6 bg-gray-300 hover:bg-gray-400
+                        text-gray-500 px-3 py-1 rounded-full shadow-lg cursor-pointer font-medium"
+            >
+            <i class="fas fa-angle-down"></i>
+            </div>
+        )}
+            <div 
+                ref= {containerRef} 
+                className="flex-1 overflow-y-auto p-4"
+                onScroll={handleScroll}
+            >
+                {chatLog.reduce((arr, msg, idx) => {
+                    const thisDate = formatDate(msg.createAt);
+                    const prevDate = idx > 0 ? formatDate(chatLog[idx - 1].createAt) : null;
+
+                    // Nếu là tin nhắn đầu hoặc khác ngày với tin trước, chèn divider
+                    if ((idx === 0 || thisDate !== prevDate)) {
+                        arr.push(
+                            <DateDivider key={`div-${idx}`} date={thisDate} />
+                        );
+                    }
+
+                    // Rồi mới render tin nhắn
+                    arr.push(
                     msg.from._id === user.id
-                    ? <SendMess key={idx} mess={msg} user={user} />
-                    : <ReceiveMess key={idx} mess={msg} />
-                )}
+                        ? <SendMess key={`msg-${idx}`} mess={msg} user={user} />
+                        : <ReceiveMess key={`msg-${idx}`} mess={msg} />
+                    );
+
+                    return arr;
+                }, [])}
+                <div ref={bottomRef}></div>
             </div>
 
+            {isTyping && (
+                <span className='flex items-center w-9 h-4 rounded-t-lg bg-gray-200'>
+                    <img className='h-4 w-14' src="/typing.gif"/> 
+                    <p className='text-gray-400 ms-2 text-xs font-medium'>typing</p>
+                </span>
+            )}
             <ChatFooter sendMess={handleSend} />
         </div>
     );

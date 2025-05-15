@@ -92,6 +92,16 @@ io.on('connection', (socket) => {
       socket.to(groupId._id).emit('receive_message', message);
     }
   });
+
+  socket.on('typing', ({userId, partnerId}) => {
+    const receiverSocketId = onlineUsers.get(partnerId);
+    io.to(receiverSocketId).emit('is_typing', userId);
+  })
+
+  socket.on('stop_typing', ({userId, partnerId}) => {
+    const receiverSocketId = onlineUsers.get(partnerId);
+    io.to(receiverSocketId).emit('is_stop_typing', userId);
+  })
   
 
   socket.on('disconnect', () => {

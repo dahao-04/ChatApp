@@ -13,7 +13,7 @@ const Notification = ({notifi, setNotifi}) => {
         <div className={`fixed top-4 ${notifi.show ? 'right-4' : '-right-96'} 
             ${notifi.status ? 'bg-green-100' : 'bg-red-100'}
             w-fit p-4 border border-gray-300 rounded-2xl bg-white 
-            z-50 flex items-center shadow-md transition-all duration-300 ease-in-out`}>
+            z-[70] flex items-center shadow-md transition-all duration-300 ease-in-out`}>
             {notifi.status
                 ? (<i className="fas fa-check-circle text-green-600 bg-white rounded-full"></i>) 
                 : (<i className="fas fa-times-circle text-red-600 bg-white rounded-full"></i>)

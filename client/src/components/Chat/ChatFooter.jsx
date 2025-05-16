@@ -2,7 +2,7 @@ import { useState, useRef, useContext, useEffect } from 'react'
 import axios from '../../api/axios';
 import { ChatContext } from '../../context/chatContext';
 
-export default function ChatFooter({ sendMess }) {
+export default function ChatFooter({ sendMess, showScrollBtn, scrollToBottom }) {
   const { socket, currentSender, user, setNotifi } = useContext(ChatContext);
   const [mess, setMess] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -54,6 +54,7 @@ export default function ChatFooter({ sendMess }) {
       setImageUrl(url);
       sendMess(mess, url);
       setMess('');
+      setImageUrl('');
       setIsTyping(false);
     } catch (err) {
       setNotifi({show: true, status: false, message: err.response.data.message })
@@ -63,7 +64,6 @@ export default function ChatFooter({ sendMess }) {
   const handleLoadSticker = async () => {
     try {
       const res = await axios.get('/sticker');
-      console.log(res)
       setStickerSetList(res.data.data);
     } catch (err) {
       console.log(err)
@@ -79,7 +79,7 @@ export default function ChatFooter({ sendMess }) {
   }
 
   return (
-    <footer className="p-4 border border-gray-200 rounded-b-lg">
+    <footer className="relative p-4 border border-gray-200 rounded-b-lg">
       <div className="flex items-center">
         <input
           className="w-full h-[5vh] p-2 border border-gray-300 rounded"
@@ -130,7 +130,15 @@ export default function ChatFooter({ sendMess }) {
           ))}
         </div>
       )}
-
+      {showScrollBtn && (
+          <div
+              onClick={scrollToBottom}
+              className="absolute -top-14 right-5 bg-gray-300 hover:bg-gray-400
+                      text-gray-500 px-3 py-1 rounded-full shadow-lg cursor-pointer font-medium"
+          >
+          <i className="fas fa-angle-down"></i>
+          </div>
+      )}
       <input
         type="file"
         ref={fileInputRef}

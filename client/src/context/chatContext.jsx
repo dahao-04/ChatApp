@@ -37,13 +37,12 @@ export const ChatProvider = ({children}) => {
     
     useEffect( () => {
         if(!userLoaded) return;
-        axios.get(`/mess/log/${user.id}`)
-        .then(res => {
-            setLoadingCount(prev => prev + 1);
-            setSendList(res.data.data.sendList);
-            setReceiveList(res.data.data.receiveList)})
-        .catch(err => console.log("Error: ", err));
-
+        // axios.get(`/mess/log/${user.id}?page=1&limit=10`)
+        // .then(res => {
+        //     setLoadingCount(prev => prev + 1);
+        //     setSendList(res.data.data.sendList);
+        //     setReceiveList(res.data.data.receiveList)})
+        // .catch(err => console.log("Error: ", err));
         axios.get(`/conversation/${user.id}`)
         .then(res => {
             setLoadingCount(prev => prev + 1);
@@ -60,7 +59,7 @@ export const ChatProvider = ({children}) => {
     },[user.id, userLoaded])
 
     useEffect(() => {
-        if(loadingCount === 4) {
+        if(loadingCount === 3) {
             setIsLoading(false);
             setLoadingCount(0);
         }

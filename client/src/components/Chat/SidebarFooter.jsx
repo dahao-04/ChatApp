@@ -96,17 +96,19 @@ const SidebarFooter = () => {
     };
 
     return (
-        <div className="border h-[10vh] flex items-center justify-end p-4 bg-white rounded-lg relative">
-            <span className="me-2 font-normal italic">Welcome back <strong>{user.name}</strong>!</span>
+        <div className="relative border h-[10vh] flex items-center justify-between rounded-lg relative bg-gradient-to-r from-[#112D4E] to-white-500">
+            <img src="http://localhost:3000/uploads/funstuff/fun_2.gif" alt="" className='w-[9vh] rounded-[4vh]' />
+            <div className='flex items-center justify-end p-4 h-[10vh] w-[40vh]'>
+                <span className="me-2 font-normal italic">Welcome <strong>{user.name}</strong>!</span>
+                <img
+                    alt="User avatar"
+                    onClick={() => setToggleBtn(state => !state)}
+                    className="w-[13vh] h-[5vh] rounded-full object-cover shrink-0 hover:scale-105 duration-200 hover:ring-2 cursor-pointer"
+                    src={`http://localhost:3000${user.url}`}
+                />
+            </div>
 
-            <img 
-                alt="User avatar"
-                onClick={() => setToggleBtn(state => !state)}
-                className="w-[13vh] h-[6vh] rounded-full object-cover shrink-0 hover:scale-105 duration-200 hover:ring-2 cursor-pointer"
-                src={`http://localhost:3000${user.url}`}
-            />
-
-            <ul className={`absolute size-fit left-50 bottom-20 mt-2 rounded-xl p-4 shadow-lg z-10 space-y-2 transition-all 
+            <ul className={`absolute size-fit right-2 bottom-20 mt-2 rounded-xl p-4 shadow-lg z-10 space-y-2 transition-all 
                 duration-300 transform origin-top-right 
                 ${toggleBtn ? "scale-100 opacity-100 visible" : "scale-95 opacity-0 invisible"}`}>
                 <li className="transition-transform duration-200 hover:scale-105">

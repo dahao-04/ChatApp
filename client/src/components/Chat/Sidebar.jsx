@@ -151,9 +151,9 @@ const Sidebar = () => {
 
   return (
     <aside className="w-1/4 flex flex-col flex-[1_auto_1] me-3 h-screen">
-        <div className="title h-[7vh] p-4 border-b border-gray-200 rounded-t-lg flex items-center">
-          <h1 className="text-xl font-bold">
-            Chat App
+        <div className="title h-[7vh] p-4 border border-gray-200 rounded-t-lg flex items-center">
+          <h1 className="text-xl font-bold text-white">
+            TekTi
           </h1>
         </div>
         <div className="p-4 h-[10vh] flex shadow">

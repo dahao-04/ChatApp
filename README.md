@@ -32,6 +32,7 @@ This repository contains a real-time chat application built with Node.js, Expres
 - Responsive UI with React 📱
 - Upload user, group avatar
 - Change user name, group name, password
+- Using pagination for load more
 ---
 
 ## 🛠️ Tech Stack

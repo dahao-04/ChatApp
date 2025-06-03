@@ -43,6 +43,7 @@ This repository contains a real-time chat application built with Node.js, Expres
 - **Database**: MongoDB
 - **Authentication**: JWT
 - **Environment Management**: dotenv
+- **Deployment**: Docker
 
 ---
 
@@ -68,7 +69,7 @@ This repository contains a real-time chat application built with Node.js, Expres
 - Node.js v14 or above
 - npm or yarn
 - MongoDB instance (local or Atlas)
-
+- Docker v3 or above
 ---
 
 ## 🚧 Setup & Installation
@@ -90,16 +91,22 @@ This repository contains a real-time chat application built with Node.js, Expres
    # In client
    cd ../client && npm install
    ```
+3. **Using docker if you have**
+   ```
+   #Create enviroment file follow guide below
+   #Enter this command to start
+   docker compose up --build
+   ```
 
 ---
 
 ## 🔧 Configuration
 
-Create a `.env` file in `api-server` directories based on the provided `.env.example` files.
+Create a `.env` file in directories based on the provided `.env.example` files.
 
 ```ini
 # .env example for api-server
-MONGODB_URI=mongodb://localhost:27017/chat-app
+DB_URL=mongodb://localhost:27017/chat-app
 SECRET_KEY=your_jwt_secret
 SECRET_REFRESH_KEY=your_jwt_secret
 
@@ -108,7 +115,7 @@ SECRET_REFRESH_KEY=your_jwt_secret
 ---
 
 ## ▶️ Running the Services
-
+**If you have docker, you dont need to do this step**
 **In separate terminals**:
 
 1. **API Server**
@@ -128,7 +135,6 @@ SECRET_REFRESH_KEY=your_jwt_secret
    cd client
    npm run dev
    ```
-
 The client will be available at `http://localhost:5173` by default.
 
 ---
@@ -137,6 +143,8 @@ The client will be available at `http://localhost:5173` by default.
 
 ```
 chat-app/
+├─ .env              # Your environment variable in here
+├─ docker-compose.yml# Script of docker
 ├─ api-server/       # REST API service 🔒
 │  ├─ config/        # App configuration ⚙️
 │  ├─ middleware/    # Auth & error handlers 🧱

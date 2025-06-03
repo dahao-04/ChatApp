@@ -14,7 +14,7 @@ export const ChatProvider = ({children}) => {
     const [conversationList, setConversationList] = useState([]);
     const [groupList, setGroupList] = useState([]);
     const [notifi, setNotifi] = useState({show: false, status: false, message: ""});
-    const [onlineUsers, setOnlineUsers] = useState({});
+    const [onlineUsers, setOnlineUsers] = useState([]);
     const [userLoaded, setUserLoaded] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [loadingCount, setLoadingCount] = useState(0);

@@ -13,7 +13,7 @@ const authRoute = require('./routes/authRoute');
 const conversationRoute = require('./routes/conversationRoute');
 const uploadRoute = require('./routes/uploadImgRoute');
 const stickerRoute = require('./routes/stickerRoute');
-
+const PORT = process.env.PORT || 3000;
 
 app.use(cors({
   origin: 'http://localhost:5173',
@@ -39,6 +39,6 @@ app.use((req, res, next) => {
   });
 app.use(errorHandler);
 
-app.listen(3000, () => {
-    console.log("Server is running on port http://localhost:3000");
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 })

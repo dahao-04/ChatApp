@@ -3,6 +3,7 @@ const axios = require('axios');
 const http = require('http');
 const { Server } = require('socket.io');
 
+const PORT = process.env.PORT || 3001;
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -101,6 +102,6 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(3001, () => {
-  console.log('chat-server running on http://localhost:3001');
+server.listen(PORT, () => {
+  console.log(`chat-server running on port ${PORT}`);
 });

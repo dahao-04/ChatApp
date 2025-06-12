@@ -15,10 +15,7 @@ const uploadRoute = require('./routes/uploadImgRoute');
 const stickerRoute = require('./routes/stickerRoute');
 const PORT = process.env.PORT || 3000;
 
-app.use(cors({
-  origin: 'https://chat-brevdeisw-haodas-projects.vercel.app',
-  credentials: true
-}));
+app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

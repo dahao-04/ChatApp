@@ -16,7 +16,7 @@ const stickerRoute = require('./routes/stickerRoute');
 const PORT = process.env.PORT || 3000;
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: 'https://chat-brevdeisw-haodas-projects.vercel.app',
   credentials: true
 }));
 app.use(cookieParser());

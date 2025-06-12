@@ -14,10 +14,12 @@ export default function ChatFooter({ sendMess, showScrollBtn, scrollToBottom }) 
 
   // Emit typing events with debounce
   useEffect(() => {
-    if (isTyping) {
-      socket.emit('typing', { userId: user.id, partnerId: currentSender.id });
-    } else {
-      socket.emit('stop_typing', { userId: user.id, partnerId: currentSender.id });
+    if(socket) {
+      if (isTyping) {
+        socket.emit('typing', { userId: user.id, partnerId: currentSender.id });
+      } else {
+        socket.emit('stop_typing', { userId: user.id, partnerId: currentSender.id });
+      }
     }
   }, [isTyping, socket, user.id, currentSender.id]);
 

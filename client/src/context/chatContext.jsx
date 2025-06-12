@@ -67,7 +67,7 @@ export const ChatProvider = ({children}) => {
 
     // 1. initialize socket only once per user change
     useEffect(() => {
-        const sock = io('http://localhost:3001', {
+        const sock = io('https://chatapp-1-niuf.onrender.com', {
             auth: {
                 token: token
             }
@@ -92,6 +92,7 @@ export const ChatProvider = ({children}) => {
     return (
         <ChatContext.Provider value={{
             socket,
+            setSocket,
             sendList,
             setSendList,
             receiveList,

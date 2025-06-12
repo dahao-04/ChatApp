@@ -14,7 +14,8 @@ const LoginPage = () => {
                 user_password: formData.password
             });
             if(response.data){
-                localStorage.setItem('auth-token', response.data.token); 
+                const token = response.data.token;
+                localStorage.setItem('auth-token', token);
                 setTimeout(() => {window.location.href= ("/chat")}, 200);
             }
         } catch (error) {

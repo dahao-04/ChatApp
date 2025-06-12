@@ -1,7 +1,7 @@
 import axiosR from 'axios';
 
 const axios = axiosR.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: 'https://chatapp-x9z6.onrender.com',
   withCredentials: true,
 });
 

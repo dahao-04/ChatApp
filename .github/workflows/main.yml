@@ -1,34 +1,4 @@
-name: CI/CD ChatApp
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Login to GHCR
-        run: echo "${{secrets.GITHUB_TOKEN}}" | docker login ghcr.io -u ${{github.actor}} --password-stdin
-      
-      - name: Build and Tag Image
-        run: |
-          export APP_TAG=${{github.sha}}
-          VERSION_TAG=$APP_TAG docker compose build --parallel
-
-      - name: Push Image
-        run: |
-          export APP_TAG=${{github.sha}}
-
-          docker push chatapp/api-server:$APP_TAG
- name: CI/CD ChatApp (Manual Docker Steps)
+name: CI/CD ChatApp (Manual Docker Steps)
 
 on:
   push:

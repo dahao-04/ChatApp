@@ -92,4 +92,5 @@ const Login = ({type, fields, func}) => {
     );
 }
 
+
 export default Login;

@@ -20,6 +20,7 @@ export const ChatProvider = ({children}) => {
     const [loadingCount, setLoadingCount] = useState(0);
     const [isTyping, setIsTyping] = useState(false);
     const token = localStorage.getItem('auth-token');
+    const chatUrl = import.meta.env.VITE_CHAT_URL;
 
     useEffect( () => {
         if(!token) {
@@ -67,7 +68,7 @@ export const ChatProvider = ({children}) => {
 
     // 1. initialize socket only once per user change
     useEffect(() => {
-        const sock = io('https://chatapp-1-niuf.onrender.com', {
+        const sock = io(`${chatUrl}`, {
             auth: {
                 token: token
             }

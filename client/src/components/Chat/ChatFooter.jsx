@@ -11,6 +11,7 @@ export default function ChatFooter({ sendMess, showScrollBtn, scrollToBottom }) 
   const typingTimeoutRef = useRef(null);
   const [stickerSetList, setStickerSetList] = useState([]);
   const [openSticker, setOpenSticker] = useState(false);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   // Emit typing events with debounce
   useEffect(() => {
@@ -121,7 +122,7 @@ export default function ChatFooter({ sendMess, showScrollBtn, scrollToBottom }) 
                 {stickerSet.stickers.map((stickerUrl, index) => (
                   <img
                     key={index}
-                    src={`http://localhost:3000${stickerUrl}`}
+                    src={`${apiUrl}${stickerUrl}`}
                     alt="sticker"
                     className="w-12 h-12 cursor-pointer hover:scale-110 duration-200"
                     onClick={()=> handleSendSticker(stickerUrl)}

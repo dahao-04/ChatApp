@@ -3,6 +3,7 @@ import formatTime from '../../helpers/formatTime';
 const Inbox = ({ user, mess, onClick, presence }) => {
     const time = formatTime(mess.lastMessage.createAt);
     const sender = mess?.participant?.find(p => p._id !== user.id);
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     const checkTypeMessage = (url) => {
         if (url.includes("/uploads/messages/")) return "[Hehe]";
@@ -21,7 +22,7 @@ const Inbox = ({ user, mess, onClick, presence }) => {
         ? sender?.user_name
         : mess.groupId?.group_name;
 
-    const avatarSrc = `http://localhost:3000${mess.groupId ? mess.groupId.avatar_url : sender?.avatar_url}`;
+    const avatarSrc = `${apiUrl}${mess.groupId ? mess.groupId.avatar_url : sender?.avatar_url}`;
     const showPresence = mess.type === 'direct';
 
     return (

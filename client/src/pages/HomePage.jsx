@@ -41,9 +41,9 @@ const HomePage = () => {
             <Header/>
             <main className="mx-auto mt-8 p-4">
              <section className="text-center mb-12">
-              <h2 className="text-4xl font-bold mb-4">
+              <h3 className="text-4xl font-bold mb-4">
                Welcome to TekTi
-              </h2>
+              </h3>
               <p className="text-lg text-gray-700 mb-6">
                Connect with your friends and family instantly.
               </p>

@@ -1,11 +1,10 @@
+/* --- CÁC KIỂU CHUNG (FONT, LAYOUT) --- */
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color-scheme: light dark; 
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,14 +12,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-
 a {
   font-weight: 500;
-  color: #646cff;
   text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
 }
 
 body {
@@ -41,50 +35,100 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: border-color 0.25s, background-color 0.25s;
 }
 
-input:focus {
-  outline: 4px auto #6e83a8;
-}
-
+/* --- THEME SÁNG (LIGHT MODE) --- */
 @media (prefers-color-scheme: light) {
   :root {
-    color: black;
-    background-color: #F9F7F7;
+    color: #242424; /* Chữ đen */
+    background-color: #FFFFFF; /* Nền trắng */
   }
-  .title{
-    color: white;
-    background-color: #112D4E;
-  }
-  header {
-    color: white;
-    background-color: #3F72AF;
-  }
-  button {
-    color: white;
-    background-color: #3F72AF;
+  .title, header, button {
+    color: #FFFFFF; /* Chữ trắng trên nền màu chủ đạo */
+    background-color: #646cff; /* Màu chủ đạo */
   }
   button:hover {
-    background-color: #315786;
+    background-color: #535bf2; /* Màu chủ đạo tối hơn khi hover */
   }
-
   ul{
-    background-color: white;
+    background-color: #FFFFFF; /* Nền trắng */
   }
   li{
-    border: #315786
+    border: 1px solid #646cff; /* Viền màu chủ đạo */
   }
   p{
-    color: white;
+    color: #242424; /* Chữ đen */
   }
-
   a{
-    color: #3F72AF;
+    color: #646cff; /* Link màu chủ đạo */
   }
   a:hover{
-    color: #315786;
+    color: #535bf2; /* Link màu chủ đạo tối hơn khi hover */
   }
+  input:focus {
+    outline: 4px auto #646cff;
+  }
+  .bg-response{
+    background-color: #c9c6c6;
+  }
+}
+
+/* --- THEME TỐI (DARK MODE) --- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: rgba(255, 255, 255, 0.87); /* Chữ trắng */
+    background-color: #242424; /* Nền tối */
+  }
+  .title, header, button {
+    color: rgba(255, 255, 255, 0.87); /* Chữ trắng */
+    background-color: #1a1a1a; /* Nền thành phần tối hơn */
+  }
+  button:hover {
+     border-color: #646cff; /* Viền màu chủ đạo khi hover */
+  }
+  ul {
+    background-color: #1a1a1a;
+  }
+  li {
+    border: 1px solid #646cff; /* Viền màu chủ đạo */
+  }
+  p {
+    /* Kế thừa màu chữ từ :root */
+  }
+  a {
+    color: #646cff; /* Link màu chủ đạo */
+  }
+  a:hover {
+    color: #535bf2; /* Link màu chủ đạo tối hơn khi hover */
+  }
+  input:focus {
+    outline: 4px auto #535bf2;
+  }
+  .bg-response{
+    background-color: #f5e2e2;
+  }
+  h2 {
+    color: #242424;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 1rem; /* Giảm khoảng đệm trên màn hình nhỏ */
+  }
+
+  h1 {
+    font-size: 2.4em; /* Giảm cỡ chữ tiêu đề */
+  }
+  
+  /* Tùy chọn: Bạn có thể muốn các nút bấm chiếm toàn bộ chiều rộng
+     để dễ dàng nhấn hơn trên di động */
+  /*
+  button {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  */
 }

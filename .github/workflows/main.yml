@@ -9,7 +9,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     permissions:
-      content: read
+      contents: read
       packages: write
     steps:
       - name: Checkout repo

@@ -28,22 +28,73 @@ jobs:
           export APP_TAG=${{github.sha}}
 
           docker push chatapp/api-server:$APP_TAG
-          docker tag chatapp/api-server:$APP_TAG chatapp/api-server:latest
-          docker push chatapp/api-server:latest
+ name: CI/CD ChatApp (Manual Docker Steps)
 
-          docker push chatapp/chat-server:$APP_TAG
-          docker tag chatapp/chat-server:$APP_TAG chatapp/chat-server:latest
-          docker push chatapp/chat-server:latest
+on:
+  push:
+    branches: [main]
 
-          docker push chatapp/client:$APP_TAG
-          docker tag chatapp/client:$APP_TAG chatapp/client:latest
-          docker push chatapp/client:latest
+env:
+  REGISTRY: ghcr.io
+  IMAGE_REPO: ${{ github.repository }} # Lấy tên User/Org và Tên Repo
+
+jobs:
+  build:
+    name: Build and Push Images
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # Vẫn cần quyền này để đẩy lên GHCR
+      
+    steps:
+      # 1. Checkout (Đây là Action cần thiết duy nhất)
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Login to GHCR (Thủ công)
+      - name: Manual Login to GHCR
+        # Sử dụng lệnh docker login tiêu chuẩn, truyền token qua stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
+        
+      # 3. Build All Services (Thủ công, dùng docker compose)
+      - name: Build All Services
+        run: |
+          # Truyền SHA commit làm VERSION_TAG để gắn tag duy nhất
+          VERSION_TAG=${{ github.sha }} docker compose build --no-cache --parallel
+          
+      # 4. Tag and Push All Services (Thủ công)
+      - name: Tag and Push Images
+        run: |
+          # Khai báo các biến cục bộ
+          REPO=${{ env.IMAGE_REPO }}
+          REGISTRY=${{ env.REGISTRY }}
+          TAG=${{ github.sha }}
+          
+          # Định nghĩa mảng dịch vụ
+          SERVICES=(api-server chat-server client)
+
+          for SERVICE in "${SERVICES[@]}"; do
+            FULL_IMAGE=$REGISTRY/$REPO/$SERVICE
+            
+            echo "Processing $SERVICE..."
+            
+            # 4a. Đẩy tag SHA commit
+            docker push $FULL_IMAGE:$TAG
+            
+            # 4b. Gắn tag 'latest' vào image SHA commit
+            docker tag $FULL_IMAGE:$TAG $FULL_IMAGE:latest
+            
+            # 4c. Đẩy tag 'latest'
+            docker push $FULL_IMAGE:latest
+          done
+          
+  # ----------------------------------------------------
   
   deploy:
     name: Deploy to server
     needs: build
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v0.1.7
@@ -52,9 +103,16 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_SSH_PORT }}
+          
           script: |
             cd ${{ secrets.SERVER_PATH }}
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            
+            # Đăng nhập GHCR trên SERVER
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
+            
+            # Kéo image mới và khởi động lại
             docker compose pull
             docker compose up -d --remove-orphans
+            
+            # Dọn dẹp
             docker image prune -f

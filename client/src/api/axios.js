@@ -1,6 +1,6 @@
 import axiosR from 'axios';
 
-const apiUrl = "https://www.haoda.id.vn";
+const apiUrl = "http://www.haoda.id.vn";
 
 const axios = axiosR.create({
   baseURL: apiUrl + '/api',

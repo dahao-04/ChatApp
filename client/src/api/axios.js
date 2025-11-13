@@ -3,7 +3,7 @@ import axiosR from 'axios';
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const axios = axiosR.create({
-  baseURL: apiUrl,
+  baseURL: `${apiUrl}/api`,
   withCredentials: true,
 });
 

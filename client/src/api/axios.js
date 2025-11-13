@@ -1,9 +1,9 @@
 import axiosR from 'axios';
 
-const apiUrl = import.meta.env.VITE_APP_API_URL;
+const apiUrl = "https://www.haoda.id.vn";
 
 const axios = axiosR.create({
-  baseURL: apiUrl + '/api/test',
+  baseURL: apiUrl + '/api',
   withCredentials: true,
 });
 

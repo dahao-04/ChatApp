@@ -36,7 +36,6 @@ jobs:
         run: |
           # Khai báo các biến cục bộ
           REPO=${{ env.IMAGE_REPO }}
-          REGISTRY=${{ env.REGISTRY }}
           TAG=${{ github.sha }}
           
           # Định nghĩa mảng dịch vụ

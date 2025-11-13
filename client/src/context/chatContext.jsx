@@ -68,7 +68,7 @@ export const ChatProvider = ({children}) => {
 
     // 1. initialize socket only once per user change
     useEffect(() => {
-        const sock = io(`${chatUrl}`, {
+        const sock = io(chatUrl, {
             path: "/ws/",
             auth: {
                 token: token

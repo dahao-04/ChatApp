@@ -2,7 +2,7 @@ name: CI/CD ChatApp (Manual Docker Steps)
 
 on:
   push:
-    branches: [main]
+    branches: [main,develop]
 
 env:
   IMAGE_REPO: ${{ github.repository }} # Lấy tên User/Org và Tên Repo
@@ -74,21 +74,27 @@ jobs:
           sudo apt install sshpass -y
       - name: SSH login
         run: |
-          ls -l ./docker-compose.deploy.yml
           sshpass -p ${{ secrets.SERVER_SSH_KEY }} scp \
           -o StrictHostKeyChecking=no \
           -o UserKnownHostsFile=/dev/null \
           ./docker-compose.deploy.yml \
           ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/chatapp/docker-compose.deploy.yml
-          
+
+          echo "Copy docker-compose file thành công và bắt đầu đăng nhập..."
+
           sshpass -p ${{ secrets.SERVER_SSH_KEY }} ssh \
           -o StrictHostKeyChecking=no \
           -o UserKnownHostsFile=/dev/null \
           ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << EOF
-          echo "Đăng nhập thành công và bắt đầu deploy..."
           cd /var/www/chatapp || exit 1
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
+
+          export DB_URL='${{ secrets.DB_URL }}'
+          export SECRET_KEY='${{ secrets.SECRET_KEY }}'
+          export SECRET_REFRESH_KEY='${{ secrets.SECRET_REFRESH_KEY }}'
+
           docker compose -f docker-compose.deploy.yml pull
           docker compose -f docker-compose.deploy.yml up -d --remove-orphans
+
           docker image prune -f
           EOF

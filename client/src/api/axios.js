@@ -5,7 +5,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 console.log("API URL:", apiUrl);
 
 const axios = axiosR.create({
-  baseURL: apiUrl,
+  baseURL: `${apiUrl}/api`,
   withCredentials: true,
 });
 

@@ -26,13 +26,18 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 db();
 
-app.use('/user', userRoute);
-app.use('/group', groupRoute);
-app.use('/mess', messageRoute);
-app.use('/conversation', conversationRoute);
-app.use('/auth', authRoute);
-app.use('/upload', uploadRoute);
-app.use('/sticker', stickerRoute);
+const mainRoute = express.Router();
+
+
+mainRoute.use('/user', userRoute);
+mainRoute.use('/group', groupRoute);
+mainRoute.use('/mess', messageRoute);
+mainRoute.use('/conversation', conversationRoute);
+mainRoute.use('/auth', authRoute);
+mainRoute.use('/upload', uploadRoute);
+mainRoute.use('/sticker', stickerRoute);
+
+app.use('/api', mainRoute);
 
 app.use((req, res, next) => {
     next(new AppError(`Cannot find ${req.originalUrl} on this server`, 404));

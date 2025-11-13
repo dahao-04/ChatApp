@@ -1,9 +1,9 @@
 import axiosR from 'axios';
 
-const apiUrl = import.meta.env.VITE_APP_API_URL || 'http://localhost:3000';
+const apiUrl = import.meta.env.VITE_APP_API_URL;
 
 const axios = axiosR.create({
-  baseURL: apiUrl + '/api',
+  baseURL: apiUrl + '/api/test',
   withCredentials: true,
 });
 

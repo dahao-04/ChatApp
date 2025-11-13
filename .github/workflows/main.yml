@@ -6,6 +6,7 @@ on:
 
 env:
   IMAGE_REPO: ${{ github.repository }} # Lấy tên User/Org và Tên Repo
+  REGISTRY: ghcr.io
 
 jobs:
   build:
@@ -23,7 +24,7 @@ jobs:
       # 2. Login to GHCR (Thủ công)
       - name: Manual Login to GHCR
         # Sử dụng lệnh docker login tiêu chuẩn, truyền token qua stdin
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
         
       # 3. Build All Services (Thủ công, dùng docker compose)
       - name: Build All Services
@@ -37,12 +38,13 @@ jobs:
           # Khai báo các biến cục bộ
           REPO=${{ env.IMAGE_REPO }}
           TAG=${{ github.sha }}
+          REGISTRY=${{ env.REGISTRY }}
           
           # Định nghĩa mảng dịch vụ
           SERVICES=(api-server chat-server client)
 
           for SERVICE in "${SERVICES[@]}"; do
-            FULL_IMAGE=$REPO/$SERVICE
+            FULL_IMAGE=$REGISTRY/$REPO/$SERVICE
             
             echo "Processing $SERVICE..."
             

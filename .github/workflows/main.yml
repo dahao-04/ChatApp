@@ -78,7 +78,7 @@ jobs:
           -o StrictHostKeyChecking=no \
           -o UserKnownHostsFile=/dev/null \
           ./docker-compose.deploy.yml \
-          echo "Copy docker compose file thành công và bắt đầu đăng nhập...""
+          echo "Copy docker compose file thành công và bắt đầu đăng nhập..."
 
           sshpass -p ${{ secrets.SERVER_SSH_KEY }} ssh \
           -o StrictHostKeyChecking=no \

@@ -71,8 +71,7 @@ jobs:
           sudo apt install sshpass -y
       - name: SSH login
         run: |
-          pwd
-          ls
+          ls -l ./docker-compose.deploy.yml
           sshpass -p ${{ secrets.SERVER_SSH_KEY }} scp \
           -o StrictHostKeyChecking=no \
           -o UserKnownHostsFile=/dev/null \

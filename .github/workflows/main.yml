@@ -5,7 +5,6 @@ on:
     branches: [main]
 
 env:
-  REGISTRY: ghcr.io
   IMAGE_REPO: ${{ github.repository }} # Lấy tên User/Org và Tên Repo
 
 jobs:
@@ -44,7 +43,7 @@ jobs:
           SERVICES=(api-server chat-server client)
 
           for SERVICE in "${SERVICES[@]}"; do
-            FULL_IMAGE=$REGISTRY/$REPO/$SERVICE
+            FULL_IMAGE=$REPO/$SERVICE
             
             echo "Processing $SERVICE..."
             

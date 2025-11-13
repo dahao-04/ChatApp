@@ -10,8 +10,6 @@ services:
       - SECRET_REFRESH_KEY=${SECRET_REFRESH_KEY}
       
     container_name: api-server
-    ports:
-      - "3000:3000" # Container Port:Server Port
     restart: always
     
   chat-server:
@@ -19,8 +17,6 @@ services:
     environment:
       - SECRET_KEY=${SECRET_KEY}
     container_name: chat-server
-    ports:
-      - "3001:3001"
     restart: always
     depends_on:
       - api-server

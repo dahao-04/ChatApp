@@ -78,6 +78,7 @@ jobs:
           -o StrictHostKeyChecking=no \
           -o UserKnownHostsFile=/dev/null \
           ./docker-compose.deploy.yml \
+          ./nginx.conf \
           ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/chatapp/docker-compose.deploy.yml
 
           echo "Copy docker-compose file thành công và bắt đầu đăng nhập..."

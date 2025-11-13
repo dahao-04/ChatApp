@@ -30,7 +30,7 @@ jobs:
       - name: Build All Services
         run: |
           # Truyền SHA commit làm VERSION_TAG để gắn tag duy nhất
-          VERSION_TAG=${{ github.sha }} FULL_IMAGE=${{ env.FULL_IMAGE }}/${{ env.IMAGE_REPO }} docker compose build --no-cache --parallel
+          VERSION_TAG=${{ github.sha }} FULL_IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_REPO }} docker compose build --no-cache --parallel
           
       # 4. Tag and Push All Services (Thủ công)
       - name: Tag and Push Images

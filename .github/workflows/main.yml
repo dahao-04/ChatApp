@@ -72,6 +72,7 @@ jobs:
       - name: SSH login
         run: |
           pwd
+          ls
           sshpass -p ${{ secrets.SERVER_SSH_KEY }} scp \
           -o StrictHostKeyChecking=no \
           -o UserKnownHostsFile=/dev/null \

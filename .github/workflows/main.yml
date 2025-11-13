@@ -2,7 +2,7 @@ name: CI/CD ChatApp (Manual Docker Steps)
 
 on:
   push:
-    branches: [main]
+    branches: [main,develop]
 
 env:
   IMAGE_REPO: ${{ github.repository }} # Lấy tên User/Org và Tên Repo

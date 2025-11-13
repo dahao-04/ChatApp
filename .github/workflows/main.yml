@@ -74,6 +74,7 @@ jobs:
           sshpass -p ${{ secrets.SERVER_SSH_KEY }} scp \
           -o StrictHostKeyChecking=no \
           -o UserKnownHostsFile=/dev/null \
+          pwd \
           ./docker-compose.deploy.yml \
           ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/chatapp/docker-compose.deploy.yml << EOF
           

@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  api-server:
+    image: ghcr.io/dahao-04/chatapp/api-server:latest 
+    
+    environment:
+      - DB_URL=${DB_URL}         
+      - SECRET_KEY=${SECRET_KEY}
+      - SECRET_REFRESH_KEY=${SECRET_REFRESH_KEY}
+      
+    container_name: api-server
+    ports:
+      - "3000:3000" # Container Port:Server Port
+    restart: always
+    
+  chat-server:
+    image: ghcr.io/dahao-04/chatapp/chat-server:latest
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+    container_name: chat-server
+    ports:
+      - "3001:3001"
+    restart: always
+    depends_on:
+      - api-server
+
+  client:
+    image: ghcr.io/dahao-04/chatapp/client:latest
+    container_name: client
+    ports:
+      - "5173:80"
+    restart: always
+    depends_on:
+      - api-server

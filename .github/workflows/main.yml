@@ -68,7 +68,7 @@ jobs:
     steps:
       - name: Copy docker-compose.yml file
         run: |
-          sudo install sshpass -y
+          sudo apt install sshpass -y
       - name: SSH login
         run: |
           sshpass -p ${{ secrets.SERVER_SSH_KEY }} ssh \

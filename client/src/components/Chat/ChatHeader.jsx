@@ -5,7 +5,7 @@ import Canvas from '../Canvas'
 const ChatHeader = ({socket}) => {
     const { currentSender } = useContext(ChatContext);
     const [showCanvas, setShowCanvas] = useState(false);
-    const apiUrl = import.meta.env.VITE_API_URL;
+    const imageSrvUrl = import.meta.env.VITE_IMAGE_SRV_URL;
 
     return (
         <header className="flex items-center justify-between p-4 border-b bg-[#3F72AF] rounded-t-lg">
@@ -14,7 +14,7 @@ const ChatHeader = ({socket}) => {
                     <img
                         alt="Current chat user avatar"
                         className="w-[6vh] h-[6vh] rounded-full"
-                        src={`${apiUrl}${currentSender.url}`}
+                        src={`${imageSrvUrl}${currentSender.url}`}
                     />
                     <span className={`absolute rounded-full w-[2vh] h-[2vh] right-0 bottom-0
                         ${currentSender.type === 'direct' ? currentSender.persence === 'online' ? 'bg-green-500' : 'bg-gray-400' : 'hidden'}`}></span>

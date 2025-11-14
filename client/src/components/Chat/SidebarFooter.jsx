@@ -9,8 +9,9 @@ const SidebarFooter = () => {
     const [openModal, setOpenModal] = useState(false);
     const [modalConfig, setModalConfig] = useState({ title: '', fieldList: [], func: () => {} });
     const fileInputRef = useRef(null);
-
+    const defaultAvatar = "https://res.cloudinary.com/drqkpxzov/image/upload/v1763128872/default_sxbr11_zkgy7d.png";
     const apiUrl = import.meta.env.VITE_API_URL;
+    const userAvatarUrl = user.url ? `${apiUrl}${user.url}` : defaultAvatar;
     
     const handleAvatarChange = async (e) => {
         const file = e.target.files[0];
@@ -99,14 +100,14 @@ const SidebarFooter = () => {
 
     return (
         <div className="relative border h-[10vh] flex items-center justify-between rounded-lg relative bg-gradient-to-r from-[#112D4E] to-white-500">
-            <img src={`${apiUrl}/uploads/funstuff/fun_2.gif`} alt="" className='w-[9vh] rounded-[4vh]' />
+            <img src={"https://res.cloudinary.com/drqkpxzov/image/upload/v1763129405/fun_2_edeqcx.gif"} alt="" className='w-[9vh] rounded-[4vh]' />
             <div className='flex items-center justify-end p-4 h-[10vh] w-[40vh]'>
                 <span className="me-2 font-normal italic">Welcome <strong>{user.name}</strong>!</span>
                 <img
                     alt="User avatar"
                     onClick={() => setToggleBtn(state => !state)}
                     className="w-[13vh] h-[5vh] rounded-full object-cover shrink-0 hover:scale-105 duration-200 hover:ring-2 cursor-pointer"
-                    src={`${apiUrl}${user.url}`}
+                    src={`${userAvatarUrl}`}
                 />
             </div>
 

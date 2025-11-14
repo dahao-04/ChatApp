@@ -13,7 +13,7 @@ const Canvas = ({ title, show, onClose, socket }) => {
 
     const fileInputRef = useRef(null);
 
-    const apiUrl = import.meta.env.VITE_API_URL;
+    const imageSrvUrl = import.meta.env.VITE_IMAGE_SRV_URL;
 
     const handleToggle = (index) => {
         setOpenIndex(prev => prev === index ? null : index);
@@ -200,7 +200,7 @@ const Canvas = ({ title, show, onClose, socket }) => {
                     <header className="flex-col justify-items-center p-4 border-b border-gray-300 rounded-t-lg">
                         <img 
                             className="w-20 h-20 rounded-full object-cover shrink-0"
-                            src={`${apiUrl}${currentSender.url}`}
+                            src={`${imageSrvUrl}${currentSender.url}`}
                             alt="" 
                         />
                         <h2 className="text-lg font-semibold text-white">{title}</h2>
@@ -230,7 +230,7 @@ const Canvas = ({ title, show, onClose, socket }) => {
                                                     <div className="flex items-center">
                                                         <img 
                                                             className="w-10 h-10 rounded-full object-cover shrink-0 me-2"
-                                                            src={`${apiUrl}${item.avatar_url}`}
+                                                            src={`${imageSrvUrl}${item.avatar_url}`}
                                                             alt="" 
                                                         />
                                                         <h2 className="text-sm font-medium text-gray-900">{item.user_name}</h2>

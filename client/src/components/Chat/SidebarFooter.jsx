@@ -9,7 +9,7 @@ const SidebarFooter = () => {
     const [openModal, setOpenModal] = useState(false);
     const [modalConfig, setModalConfig] = useState({ title: '', fieldList: [], func: () => {} });
     const fileInputRef = useRef(null);
-    const defaultAvatar = "https://res.cloudinary.com/drqkpxzov/image/upload/v1763128872/default_sxbr11_zkgy7d.png";
+    const defaultAvatar = "https://res.cloudinary.com/drqkpxzov/image/upload/v1763135216/default_sxbr11_dik0rl.png";
     const imageSrvUrl = import.meta.env.VITE_IMAGE_SRV_URL;
     const userAvatarUrl = user.url ? `${imageSrvUrl}${user.url}` : defaultAvatar;
     

@@ -1,15 +1,22 @@
 import axiosR from 'axios';
 
-const apiUrl = "http://www.haoda.id.vn";
+// Thêm giá trị dự phòng để tránh lỗi 'undefined' trong Dev Mode
+// Sử dụng địa chỉ Backend Dev Server (3000) nếu biến môi trường bị thiếu
+const apiUrl = import.meta.env.VITE_APP_API_URL || 'http://localhost:3000';
 
 const axios = axiosR.create({
-  baseURL: apiUrl + '/api',
+  // Nối chuỗi /api ở đây nếu bạn đã cấu hình backend với tiền tố /api
+  baseURL: apiUrl, 
   withCredentials: true,
 });
 
+// === KHÔI PHỤC REQUEST INTERCEPTOR ĐỂ LẤY TOKEN ===
 axios.interceptors.request.use(
   (config) => {
+    // 1. Lấy token từ localStorage
     const token = localStorage.getItem('auth-token');
+    
+    // 2. Nếu token tồn tại, thêm vào header
     if (token) {
       config.headers['auth-token'] = token;
     }
@@ -17,6 +24,7 @@ axios.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+// ===================================================
 
 axios.interceptors.response.use(
   res => res,
@@ -35,7 +43,9 @@ axios.interceptors.response.use(
     if (code === 'TOKEN_EXPIRED') {
       original._retry = true;
       try {
-        const r = await axios.post('/auth/refresh');
+        // GỌI REFRESH TOKEN SỬ DỤNG AXIOS ĐÃ CÓ CẤU HÌNH BASEURL
+        const r = await axios.post('/auth/refresh'); 
+        
         const newToken = r.data.token;
         localStorage.setItem('auth-token', newToken);
 
@@ -48,11 +58,11 @@ axios.interceptors.response.use(
         return Promise.reject(e);
       }
     }
-
+    
     // Nếu không có token hoặc token không hợp lệ
     if ((code === 'NO_TOKEN' || code === 'INVALID_TOKEN') && window.location.pathname !== '/login') {
-      window.location.href = '/login';
-      return Promise.reject(error);
+        window.location.href = '/login';
+        return Promise.reject(error);
     }
 
     return Promise.reject(error);

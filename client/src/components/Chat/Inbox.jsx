@@ -3,7 +3,7 @@ import formatTime from '../../helpers/formatTime';
 const Inbox = ({ user, mess, onClick, presence }) => {
     const time = formatTime(mess.lastMessage.createAt);
     const sender = mess?.participant?.find(p => p._id !== user.id);
-    const imageSrvUrl = "https://res.cloudinary.com/drqkpxzov/image/upload/v1750667945/ChatApp";
+    const imageSrvUrl = import.meta.env.VITE_IMAGE_SRV_URL;
 
     const checkTypeMessage = (url) => {
         if (url.includes("/uploads/messages/")) return "[Hehe]";

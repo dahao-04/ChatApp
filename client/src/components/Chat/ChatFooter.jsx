@@ -11,7 +11,6 @@ export default function ChatFooter({ sendMess, showScrollBtn, scrollToBottom }) 
   const typingTimeoutRef = useRef(null);
   const [stickerSetList, setStickerSetList] = useState([]);
   const [openSticker, setOpenSticker] = useState(false);
-  const apiUrl = import.meta.env.VITE_API_URL;
 
   // Emit typing events with debounce
   useEffect(() => {

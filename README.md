@@ -42,8 +42,10 @@ This repository contains a real-time chat application built with Node.js, Expres
 - **Frontend (Client)**: React, Socket.IO-client
 - **Database**: MongoDB
 - **Authentication**: JWT
-- **Environment Management**: dotenv
-- **Deployment**: Docker
+- **Environment Management**: dotenv, Github Enviroment
+- **Deployment**: Docker, Nginx, Github Actions, Github Image Registry
+- **Monitoring**: Grafana, Prometheus
+- **Networking**: Cloudflare Service
 
 ---
 
@@ -143,8 +145,13 @@ The client will be available at `http://localhost:5173` by default.
 
 ```
 chat-app/
+├─ .github
+   └─ workflows
+      └─ main.yml    # Script for CI/CD on github actions
 ├─ .env              # Your environment variable in here
-├─ docker-compose.yml# Script of docker
+├─ nginx.conf        # Script for config webserver (nginx)
+├─ docker-compose.yml # Script for build and push 
+├─ docker-compose.deploy.yml #Script for running on vps
 ├─ api-server/       # REST API service 🔒
 │  ├─ config/        # App configuration ⚙️
 │  ├─ middleware/    # Auth & error handlers 🧱

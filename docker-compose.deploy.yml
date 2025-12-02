@@ -36,7 +36,7 @@ services:
       - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./ssl/cloudflare:/etc/ssl/certs:ro
+      - ./ssl/cloudflare:/etc/nginx/ssl:ro
     depends_on:
       - client
     restart: always

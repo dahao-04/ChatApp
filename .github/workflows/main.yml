@@ -69,23 +69,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         
-      - name: Copy docker-compose.yml file
+      - name: Setup SSH key connection
         run: |
-          sudo apt install sshpass -y
-      - name: SSH login
-        run: |
-          sshpass -p ${{ secrets.SERVER_SSH_KEY }} scp \
-          -o StrictHostKeyChecking=no \
-          -o UserKnownHostsFile=/dev/null \
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_rsa
+
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+      - name: Deploy Application
+        run: | 
+          scp \
           ./docker-compose.deploy.yml \
           ./nginx.conf \
           ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/chatapp/
 
           echo "Copy docker-compose file thành công và bắt đầu đăng nhập..."
 
-          sshpass -p ${{ secrets.SERVER_SSH_KEY }} ssh \
-          -o StrictHostKeyChecking=no \
-          -o UserKnownHostsFile=/dev/null \
+          ssh \
           ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << EOF
           cd /var/www/chatapp || exit 1
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
